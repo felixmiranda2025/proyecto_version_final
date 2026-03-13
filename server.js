@@ -555,15 +555,24 @@ async function autoSetup() {
       const chk=await pool.query("SELECT id FROM usuarios WHERE username=$1 LIMIT 1",[u.username]);
       if (chk.rows.length===0) {
         // Construir INSERT dinámico según columnas disponibles
-        const cols=['username','nombre','password_hash','rol'];
-        const vals=[u.username,u.nombre,hash,u.rol];
+        const cols=['username','nombre','rol'];
+        const vals=[u.username,u.nombre,u.rol];
+        if (has('usuarios','password_hash')){ cols.push('password_hash'); vals.push(hash); }
+        if (has('usuarios','password'))     { cols.push('password');      vals.push(hash); }
+        if (has('usuarios','contrasena'))   { cols.push('contrasena');    vals.push(hash); }
         if (has('usuarios','activo')){ cols.push('activo'); vals.push(true); }
         if (has('usuarios','email')){ cols.push('email'); vals.push(`${u.username}@vef.com`); }
         const ph=vals.map((_,i)=>`$${i+1}`).join(',');
         await pool.query(`INSERT INTO usuarios (${cols.join(',')}) VALUES (${ph})`,vals);
         console.log(`  ✅ Usuario: ${u.username} / ${u.pass}`);
       } else if (u.username==='admin') {
-        await pool.query("UPDATE usuarios SET password_hash=$1,rol='admin' WHERE username='admin'",[hash]);
+        // Actualizar todas las columnas de contraseña del admin
+        const asets=[];const avals=[];let ai=1;
+        if(has('usuarios','password_hash')){asets.push(`password_hash=$${ai++}`);avals.push(hash);}
+        if(has('usuarios','password')){asets.push(`password=$${ai++}`);avals.push(hash);}
+        if(has('usuarios','contrasena')){asets.push(`contrasena=$${ai++}`);avals.push(hash);}
+        avals.push('admin');
+        if(asets.length) await pool.query(`UPDATE usuarios SET ${asets.join(',')},rol='admin' WHERE username=$${ai}`,avals);
         console.log('  ✅ Admin: admin / admin123');
       }
     }
@@ -615,7 +624,13 @@ app.post('/api/auth/change-password', auth, async (req,res)=>{
     if (!u) return res.status(404).json({error:'Usuario no encontrado'});
     const h=u.password_hash||u.password||'';
     if (!await bcrypt.compare(password_actual,h)) return res.status(401).json({error:'Contraseña actual incorrecta'});
-    await pool.query('UPDATE usuarios SET password_hash=$1 WHERE id=$2',[await bcrypt.hash(password_nuevo,12),req.user.id]);
+    const newHash=await bcrypt.hash(password_nuevo,12);
+    const csets=[];const cvals=[];let ci=1;
+    if(has('usuarios','password_hash')){csets.push(`password_hash=$${ci++}`);cvals.push(newHash);}
+    if(has('usuarios','password')){csets.push(`password=$${ci++}`);cvals.push(newHash);}
+    if(has('usuarios','contrasena')){csets.push(`contrasena=$${ci++}`);cvals.push(newHash);}
+    cvals.push(req.user.id);
+    await pool.query(`UPDATE usuarios SET ${csets.join(',')} WHERE id=$${ci}`,cvals);
     res.json({ok:true});
   } catch(e){ res.status(500).json({error:e.message}); }
 });
@@ -1361,8 +1376,15 @@ app.post('/api/usuarios', auth, adminOnly, async (req,res)=>{
     const {username,nombre,email,password,rol}=req.body;
     if(!username||!password) return res.status(400).json({error:'username y password requeridos'});
     const hash=await bcrypt.hash(password,12);
-    const cols=['username','nombre','password_hash','rol'];
-    const vals=[username,nombre,hash,rol||'usuario'];
+    // Insertar en columnas que existen — la BD puede tener 'password' o 'password_hash' o ambas
+    const cols=['username','nombre','rol'];
+    const vals=[username,nombre||username,rol||'usuario'];
+    // Siempre llenar password_hash si existe
+    if(has('usuarios','password_hash')){cols.push('password_hash');vals.push(hash);}
+    // También llenar 'password' si existe (columna heredada del sistema anterior)
+    if(has('usuarios','password')){cols.push('password');vals.push(hash);}
+    // También 'contrasena' por si acaso
+    if(has('usuarios','contrasena')){cols.push('contrasena');vals.push(hash);}
     if(has('usuarios','email')&&email){cols.push('email');vals.push(email);}
     if(has('usuarios','activo')){cols.push('activo');vals.push(true);}
     const ph=vals.map((_,i)=>`$${i+1}`).join(',');
@@ -1388,7 +1410,14 @@ app.post('/api/usuarios/:id/reset-password', auth, adminOnly, async (req,res)=>{
     const {password}=req.body;
     if(!password) return res.status(400).json({error:'Nueva contraseña requerida'});
     const hash=await bcrypt.hash(password,12);
-    await pool.query('UPDATE usuarios SET password_hash=$1 WHERE id=$2',[hash,req.params.id]);
+    // Actualizar todas las columnas de contraseña que existan
+    const sets=[];const pvals=[];let pi=1;
+    if(has('usuarios','password_hash')){sets.push(`password_hash=$${pi++}`);pvals.push(hash);}
+    if(has('usuarios','password')){sets.push(`password=$${pi++}`);pvals.push(hash);}
+    if(has('usuarios','contrasena')){sets.push(`contrasena=$${pi++}`);pvals.push(hash);}
+    if(!sets.length) return res.status(500).json({error:'No se encontró columna de contraseña'});
+    pvals.push(req.params.id);
+    await pool.query(`UPDATE usuarios SET ${sets.join(',')} WHERE id=$${pi}`,pvals);
     res.json({ok:true});
   }catch(e){res.status(500).json({error:e.message});}
 });
