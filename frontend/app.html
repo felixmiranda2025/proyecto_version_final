@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEF ERP · Sistema de Gestión</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════
+   VEF ERP · Design System
+══════════════════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --azul:#0D2B55;--azul-med:#1A4A8A;--azul-claro:#2E6DB4;
+  --azul-suave:#D6E4F7;--azul-bg:#EBF3FB;
+  --gris:#F4F6FA;--gris-borde:#E0E7F0;--gris-txt:#4A4A4A;
+  --verde:#27AE60;--rojo:#C0392B;--naranja:#E67E22;
+  --sidebar-w:260px;--header-h:64px;
+  --radius:12px;--shadow:0 2px 12px rgba(13,43,85,.08);
+}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--gris);color:var(--gris-txt);}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--azul);display:flex;flex-direction:column;z-index:200;transition:transform .3s cubic-bezier(.16,1,.3,1);}
+.sidebar-logo{padding:16px 20px 14px;border-bottom:1px solid rgba(255,255,255,.08);text-align:center;}
+.sidebar-logo img#sidebarLogo{max-width:160px;max-height:60px;object-fit:contain;display:block;margin:0 auto 6px;}
+.sidebar-logo .brand{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:#fff;}
+.sidebar-logo .brand span{color:var(--azul-suave);}
+.sidebar-logo .sub{color:rgba(255,255,255,.45);font-size:.72rem;margin-top:2px;}
+.nav-section{padding:20px 16px 8px;color:rgba(255,255,255,.3);font-size:.68rem;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 16px;margin:2px 8px;color:rgba(255,255,255,.65);font-size:.88rem;font-weight:500;border-radius:10px;cursor:pointer;transition:all .15s;}
+.nav-item:hover{background:rgba(255,255,255,.08);color:#fff;}
+.nav-item.active{background:var(--azul-med);color:#fff;}
+.nav-item .icon{font-size:1.1rem;width:22px;text-align:center;}
+.user-pill{display:flex;align-items:center;gap:10px;padding:10px 16px;margin:8px;background:rgba(255,255,255,.06);border-radius:10px;}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:var(--azul-claro);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:#fff;}
+.user-info .name{color:#fff;font-size:.85rem;font-weight:500;}
+.user-info .role{color:rgba(255,255,255,.4);font-size:.72rem;}
+.sidebar-footer{margin-top:auto;padding:16px 20px;border-top:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.5);font-size:.78rem;}
+.sidebar-footer a{color:rgba(255,255,255,.5);text-decoration:none;display:flex;align-items:center;gap:6px;cursor:pointer;}
+.sidebar-footer a:hover{color:#fff;}
+
+/* HEADER */
+.header{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--header-h);background:#fff;border-bottom:1px solid var(--gris-borde);display:flex;align-items:center;padding:0 28px;gap:16px;z-index:100;box-shadow:var(--shadow);}
+.page-title{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;color:var(--azul);flex:1;}
+.contact-bar{font-size:.78rem;color:var(--azul-med);display:flex;align-items:center;gap:14px;}
+.hamburger{display:none;background:none;border:none;cursor:pointer;font-size:1.4rem;color:var(--azul);padding:4px;}
+
+/* MAIN */
+.main{margin-left:var(--sidebar-w);margin-top:var(--header-h);padding:28px;min-height:calc(100vh - var(--header-h));}
+
+/* CARDS */
+.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+.card-header{padding:20px 24px 16px;border-bottom:1px solid var(--gris-borde);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.card-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--azul);display:flex;align-items:center;gap:8px;}
+.card-body{padding:24px;}
+
+/* STAT CARDS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px;}
+.stat-card{background:#fff;border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);display:flex;align-items:center;gap:16px;}
+.stat-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+.stat-icon.blue{background:var(--azul-bg);}
+.stat-icon.green{background:#e8f7ef;}
+.stat-icon.orange{background:#fff4e6;}
+.stat-val{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--azul);line-height:1;}
+.stat-lbl{font-size:.78rem;color:#888;margin-top:4px;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:8px;font-size:.85rem;font-weight:500;cursor:pointer;border:none;transition:all .15s;font-family:'DM Sans',sans-serif;}
+.btn-primary{background:var(--azul-med);color:#fff;}
+.btn-primary:hover{background:var(--azul-claro);}
+.btn-secondary{background:var(--azul-suave);color:var(--azul);}
+.btn-secondary:hover{background:#c6d8ef;}
+.btn-danger{background:#fdecea;color:var(--rojo);}
+.btn-success{background:#e8f7ef;color:var(--verde);}
+.btn-success:hover{background:#d0f0e0;color:#1a8a5a;}
+.btn-warning{background:#fff4e6;color:var(--naranja,#e67e22);}
+.btn-warning:hover{background:#ffe0b2;}
+.btn-dark{background:var(--azul);color:#fff;}
+.btn-dark:hover{background:var(--azul-osc,#0a1f3f);}
+.btn-sm{padding:6px 12px;font-size:.8rem;}
+.btn-xs{padding:4px 8px;font-size:.75rem;border-radius:6px;}
+.btn-group{display:flex;gap:8px;flex-wrap:wrap;}
+.btn-toolbar{display:flex;gap:8px;flex-wrap:wrap;padding-bottom:4px;}
+.row-sel{cursor:pointer;}
+.row-sel.selected{background:var(--azul-suave,#d6e4f7) !important;outline:2px solid var(--azul-med,#1A4A8A);}
+.row-warn{background:#fff8e1 !important;}
+.row-warn.selected{background:#ffe082 !important;}
+
+/* TABLES */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:.85rem;}
+thead th{background:var(--azul);color:#fff;padding:11px 14px;text-align:left;font-weight:600;font-size:.78rem;white-space:nowrap;}
+thead th:first-child{border-radius:8px 0 0 0;}
+thead th:last-child{border-radius:0 8px 0 0;}
+tbody tr{border-bottom:1px solid var(--gris-borde);transition:background .1s;}
+tbody tr:hover{background:var(--gris);}
+tbody td{padding:11px 14px;vertical-align:middle;}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:600;}
+.badge-borrador{background:#f0f0f0;color:#666;}
+.badge-enviada{background:#e8f0fb;color:var(--azul-med);}
+.badge-aprobada,.badge-pagada,.badge-activo{background:#e8f7ef;color:var(--verde);}
+.badge-rechazada,.badge-vencida{background:#fdecea;color:var(--rojo);}
+.badge-parcial{background:#fff4e6;color:var(--naranja);}
+.badge-pendiente{background:#eaf2ff;color:var(--azul-claro);}
+.badge-cerrado{background:#f0f0f0;color:#888;}
+.badge-admin{background:#f0e6ff;color:#6c3483;}
+.badge-usuario{background:#eaf2ff;color:var(--azul-claro);}
+
+/* FORMS */
+.form-grid{display:grid;gap:16px;}
+.form-grid-2{grid-template-columns:1fr 1fr;}
+.form-grid-3{grid-template-columns:1fr 1fr 1fr;}
+@media(max-width:640px){.form-grid-2,.form-grid-3{grid-template-columns:1fr;}}
+.field-group{display:flex;flex-direction:column;gap:6px;}
+.field-group label{font-size:.8rem;font-weight:600;color:var(--azul);}
+.field-group input,.field-group select,.field-group textarea{border:1.5px solid var(--gris-borde);border-radius:8px;padding:10px 12px;font-size:.9rem;font-family:'DM Sans',sans-serif;color:var(--gris-txt);background:#fff;transition:border-color .15s;outline:none;width:100%;}
+.field-group input:focus,.field-group select:focus,.field-group textarea:focus{border-color:var(--azul-claro);box-shadow:0 0 0 3px rgba(46,109,180,.1);}
+.field-group textarea{resize:vertical;min-height:80px;}
+.field-required::after{content:" *";color:var(--rojo);}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(13,43,85,.6);backdrop-filter:blur(4px);z-index:1000;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:700px;margin:auto;box-shadow:0 24px 64px rgba(0,0,0,.3);animation:modalIn .3s cubic-bezier(.16,1,.3,1);}
+.modal-lg{max-width:900px;}
+@keyframes modalIn{from{transform:scale(.95) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:22px 28px;border-bottom:1px solid var(--gris-borde);}
+.modal-header h2{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--azul);}
+.modal-close{width:32px;height:32px;border-radius:50%;background:var(--gris);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.modal-close:hover{background:var(--gris-borde);}
+.modal-body{padding:28px;}
+.modal-footer{padding:16px 28px;border-top:1px solid var(--gris-borde);display:flex;justify-content:flex-end;gap:10px;}
+
+/* ITEMS TABLE */
+.items-tbl{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:12px;}
+.items-tbl th{background:var(--gris);padding:9px 12px;text-align:left;font-size:.78rem;font-weight:600;color:var(--azul);}
+.items-tbl td{padding:8px 12px;border-bottom:1px solid var(--gris-borde);}
+.items-tbl input{border:1.5px solid var(--gris-borde);border-radius:6px;padding:6px 8px;width:100%;font-size:.85rem;font-family:'DM Sans',sans-serif;outline:none;}
+.items-tbl input:focus{border-color:var(--azul-claro);}
+.total-box{background:var(--azul);color:#fff;border-radius:10px;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;margin-top:12px;}
+.total-box .label{font-size:.85rem;opacity:.8;}
+.total-box .amount{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;}
+
+/* ALERTS */
+.alert{border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;font-size:.85rem;margin-bottom:16px;}
+.alert-warn{background:#fff4e6;border:1px solid #f5cba7;color:#784212;}
+.alert-err{background:#fdecea;border:1px solid #f1948a;color:#7b241c;}
+.alert-ok{background:#e8f7ef;border:1px solid #a9dfbf;color:#1a5c38;}
+.alert-info{background:var(--azul-bg);border:1px solid var(--azul-suave);color:var(--azul-med);}
+
+/* TABS */
+.tabs{display:flex;gap:2px;background:var(--gris);border-radius:10px;padding:3px;margin-bottom:20px;}
+.tab-btn{flex:1;padding:9px 16px;border-radius:8px;border:none;font-size:.83rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--gris-txt);background:transparent;transition:all .15s;}
+.tab-btn.active{background:#fff;color:var(--azul);font-weight:600;box-shadow:var(--shadow);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+/* SEARCH */
+.search-bar{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap;}
+.search-input{flex:1;min-width:200px;border:1.5px solid var(--gris-borde);border-radius:8px;padding:9px 14px;font-size:.88rem;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s;}
+.search-input:focus{border-color:var(--azul-claro);}
+
+/* SPINNER */
+.spinner{width:40px;height:40px;border:3px solid var(--azul-suave);border-top-color:var(--azul-med);border-radius:50%;animation:spin .7s linear infinite;margin:40px auto;display:block;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.toast-item{background:var(--azul);color:#fff;padding:12px 18px;border-radius:10px;font-size:.85rem;box-shadow:0 8px 24px rgba(0,0,0,.25);animation:toastIn .3s ease;}
+.toast-item.ok{background:#1e8449;}
+.toast-item.err{background:var(--rojo);}
+.toast-item.warn{background:var(--naranja);}
+@keyframes toastIn{from{transform:translateX(40px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .main,.header{margin-left:0!important;}
+  .hamburger{display:block;}
+  .contact-bar{display:none;}
+}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;}
+.overlay.open{display:block;}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <img id="sidebarLogo" src="/logo.png" alt="VEF Logo"
+         onerror="this.style.display='none';document.getElementById('sidebarBrand').style.display='block'"
+         onload="document.getElementById('sidebarBrand').style.display='none'"
+         style="max-width:160px;max-height:60px;object-fit:contain;display:block;margin:0 auto 6px;">
+    <div id="sidebarBrand" style="display:none">
+      <div class="brand">VEF <span>Automatización</span></div>
+    </div>
+    <div class="sub">Sistema ERP · Gestión Empresarial</div>
+  </div>
+  <div class="user-pill" id="userPill">
+    <div class="user-avatar" id="userAvatar">U</div>
+    <div class="user-info">
+      <div class="name" id="userName">—</div>
+      <div class="role" id="userRole">—</div>
+    </div>
+  </div>
+  <div class="nav-section">Principal</div>
+  <div class="nav-item active" data-page="dashboard" onclick="nav('dashboard')"><span class="icon">📊</span> Dashboard</div>
+  <div class="nav-section">Gestión</div>
+  <div class="nav-item" data-page="clientes" onclick="nav('clientes')"><span class="icon">👤</span> Clientes</div>
+  <div class="nav-item" data-page="proveedores" onclick="nav('proveedores')"><span class="icon">🏭</span> Proveedores</div>
+  <div class="nav-item" data-page="proyectos" onclick="nav('proyectos')"><span class="icon">📁</span> Proyectos</div>
+  <div class="nav-item" data-page="cotizaciones" onclick="nav('cotizaciones')"><span class="icon">📄</span> Cotizaciones</div>
+  <div class="nav-section">Finanzas</div>
+  <div class="nav-item" data-page="ordenes" onclick="nav('ordenes')"><span class="icon">🧾</span> Órdenes y Facturas</div>
+  <div class="nav-item" data-page="oc-prov" onclick="nav('oc-prov')"><span class="icon">📦</span> OC Proveedores</div>
+  <div class="nav-section">Operaciones</div>
+  <div class="nav-item" data-page="inventario" onclick="nav('inventario')"><span class="icon">🗃</span> Inventario</div>
+  <div class="nav-item" data-page="usuarios" id="navUsuarios" onclick="nav('usuarios')" style="display:none"><span class="icon">👥</span> Usuarios</div>
+  <div class="nav-item" data-page="config" id="navConfig" onclick="nav('config')" style="display:none"><span class="icon">⚙️</span> Configuración</div>
+  <div class="sidebar-footer">
+    <div style="margin-bottom:8px;font-size:.75rem;">📞 +52 (722) 115-7792</div>
+    <a onclick="logout()">🚪 Cerrar Sesión</a>
+  </div>
+</aside>
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- HEADER -->
+<header class="header">
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+  <div class="page-title" id="pageTitle">Dashboard</div>
+  <div style="flex:1"></div>
+  <!-- Logo en header — visible en pantallas medianas/grandes -->
+  <img id="headerLogo" src="/logo.png" alt="VEF"
+       style="max-height:38px;max-width:120px;object-fit:contain;opacity:.9;margin-right:12px;"
+       onerror="this.style.display='none'">
+  <div class="contact-bar">
+    <span>📞 +52 (722) 115-7792</span>
+    <span>✉ soporte.ventas@vef-automatizacion.com</span>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="main"><div id="pageContent"><div class="spinner"></div></div></main>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalBox">
+    <div class="modal-header">
+      <h2 id="modalTitle">Título</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer" id="modalFooter"></div>
+  </div>
+</div>
+
+<!-- MODAL SELECTOR INVENTARIO — z-index mayor, no interfiere con modal principal -->
+<div id="invSelOverlay" style="display:none;position:fixed;inset:0;background:rgba(13,43,85,.75);z-index:2000;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 20px;">
+  <div style="background:#fff;border-radius:12px;width:100%;max-width:680px;box-shadow:0 8px 40px rgba(0,0,0,.3);">
+    <div style="background:var(--azul,#0D2B55);padding:16px 20px;border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:space-between;">
+      <h2 style="color:#fff;margin:0;font-size:1.1rem;">📦 Seleccionar del Inventario</h2>
+      <button onclick="closeInvSel()" style="background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;line-height:1;">✕</button>
+    </div>
+    <div style="padding:16px;">
+      <div class="search-bar" style="margin-bottom:10px;">
+        <input id="invSelSearch" class="search-input" placeholder="Buscar producto o código..." oninput="filterTable(this,'tblInvSel')">
+      </div>
+      <div class="table-wrap" style="max-height:380px;overflow-y:auto;">
+        <table id="tblInvSel">
+          <thead><tr><th>Producto / Código</th><th>Categoría</th><th style="text-align:center">Stock</th><th style="text-align:right">P. Venta</th></tr></thead>
+          <tbody id="invSelBody"></tbody>
+        </table>
+      </div>
+      <p style="margin-top:10px;font-size:.8rem;color:#888;">Haz clic en una fila para insertar el producto en el item.</p>
+    </div>
+    <div style="padding:12px 16px;border-top:1px solid #eee;display:flex;justify-content:flex-end;">
+      <button class="btn btn-secondary" onclick="closeInvSel()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════ AUTH ══════════════ */
+const TOKEN = localStorage.getItem('vef_token');
+const USER  = JSON.parse(localStorage.getItem('vef_user') || '{}');
+if(!TOKEN) window.location.href = '/';
+
+// Fill user info
+document.getElementById('userName').textContent  = USER.nombre || USER.username || '—';
+document.getElementById('userRole').textContent   = USER.rol || '—';
+document.getElementById('userAvatar').textContent = (USER.nombre||USER.username||'U')[0].toUpperCase();
+if(USER.rol === 'admin'){
+  document.getElementById('navUsuarios').style.display = '';
+  document.getElementById('navConfig').style.display = '';
+}
+
+function logout(){
+  localStorage.removeItem('vef_token');
+  localStorage.removeItem('vef_user');
+  window.location.href = '/';
+}
+
+/* ══════════════ API ══════════════ */
+async function api(url, method='GET', body=null){
+  const opts = {
+    method,
+    headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+TOKEN }
+  };
+  if(body) opts.body = JSON.stringify(body);
+  const res = await fetch(url, opts);
+  if(res.status === 401){ logout(); return; }
+  const data = await res.json().catch(()=>({}));
+  if(!res.ok) throw new Error(data.error || 'Error del servidor');
+  return data;
+}
+
+/* ══════════════ UTILS ══════════════ */
+const fmt = (n,sym='$') => sym + parseFloat(n||0).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtSym = (n,m='USD') => (m==='USD'?'$':'MX$') + parseFloat(n||0).toLocaleString('es-MX',{minimumFractionDigits:2});
+const fmtDate = d => {
+  if(!d) return '—';
+  try {
+    // Si ya tiene T o Z es timestamp completo, si no agregar T00:00:00 para evitar desfase UTC
+    const dt = /T|Z/.test(String(d)) ? new Date(d) : new Date(String(d).slice(0,10)+'T12:00:00');
+    if(isNaN(dt)) return String(d).slice(0,10)||'—';
+    return dt.toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'});
+  } catch { return String(d).slice(0,10)||'—'; }
+};
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+function toast(msg,type='ok'){
+  const el=document.createElement('div');
+  el.className='toast-item '+type;el.textContent=msg;
+  document.getElementById('toast').appendChild(el);
+  setTimeout(()=>el.remove(),3500);
+}
+
+function badge(s){
+  const cls={borrador:'badge-borrador',enviada:'badge-enviada',aprobada:'badge-aprobada',rechazada:'badge-rechazada',pagada:'badge-pagada',pendiente:'badge-pendiente',parcial:'badge-parcial',vencida:'badge-vencida',activo:'badge-activo',cerrado:'badge-cerrado',admin:'badge-admin',usuario:'badge-usuario',confirmada:'badge-enviada','en proceso':'badge-parcial',recibida:'badge-aprobada',cancelada:'badge-rechazada',entrada:'badge-aprobada',salida:'badge-rechazada',ajuste:'badge-pendiente',ventas:'badge-enviada',compras:'badge-parcial',almacen:'badge-borrador',gerencia:'badge-admin'};
+  return `<span class="badge ${cls[s]||'badge-borrador'}">${esc(s||'—')}</span>`;
+}
+
+function setPage(t){ document.getElementById('pageTitle').textContent=t; }
+function setContent(h){ document.getElementById('pageContent').innerHTML=h; }
+function spin(){ setContent('<div class="spinner"></div>'); }
+
+function openModal(title,body,footer=''){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalBody').innerHTML=body;
+  document.getElementById('modalFooter').innerHTML=footer;
+  document.getElementById('modalBox').classList.remove('modal-lg');
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function openModalLg(title,body,footer=''){
+  openModal(title,body,footer);
+  document.getElementById('modalBox').classList.add('modal-lg');
+}
+function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); }
+function closeInvSel(){ document.getElementById('invSelOverlay').style.display='none'; }
+
+function switchTab(btn,id){
+  const c=btn.closest('.tabs').parentElement;
+  c.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  c.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  const t=document.getElementById(id);
+  if(t) t.classList.add('active');
+}
+function filterTable(inp,id){
+  const q=inp.value.toLowerCase();
+  document.getElementById(id)?.querySelectorAll('tbody tr').forEach(r=>{
+    r.style.display=r.textContent.toLowerCase().includes(q)?'':'none';
+  });
+}
+function filterByStatus(sel,id,col){
+  const v=sel.value.toLowerCase();
+  document.getElementById(id)?.querySelectorAll('tbody tr').forEach(r=>{
+    r.style.display=(!v||(r.cells[col]?.textContent||'').toLowerCase().includes(v))?'':'none';
+  });
+}
+
+/* ══════════════ NAV ══════════════ */
+const PAGES={dashboard,clientes,proveedores,proyectos,cotizaciones,ordenes,'oc-prov':ocProv,inventario,usuarios,config:configuracion};
+function nav(page){
+  document.querySelectorAll('.nav-item').forEach(e=>e.classList.toggle('active',e.dataset.page===page));
+  closeSidebar(); spin();
+  (PAGES[page]||dashboard)();
+}
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
+function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
+
+/* ══════════════ DASHBOARD ══════════════ */
+async function dashboard(){
+  setPage('Dashboard');
+  try {
+    const d = await api('/api/dashboard/metrics');
+    const cots = await api('/api/cotizaciones').catch(()=>[]);
+    const recientes = (Array.isArray(cots)?cots:[]).slice(0,6);
+
+    setContent(`
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-icon blue">📄</div><div><div class="stat-val">${d.cotizaciones_activas||0}</div><div class="stat-lbl">Cotizaciones Activas</div></div></div>
+      <div class="stat-card"><div class="stat-icon green">🗃</div><div><div class="stat-val">${d.items_inventario||0}</div><div class="stat-lbl">Items en Inventario</div></div></div>
+      <div class="stat-card"><div class="stat-icon orange">📦</div><div><div class="stat-val">${d.ordenes_pendientes||0}</div><div class="stat-lbl">OC Pendientes</div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">📄 Cotizaciones Recientes</div></div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Número</th><th>Proyecto</th><th>Cliente</th><th>Total</th><th>Estatus</th></tr></thead>
+        <tbody>${recientes.map(c=>`<tr>
+          <td><strong>${esc(c.numero_cotizacion||'—')}</strong></td>
+          <td>${esc(c.proyecto_nombre||'—')}</td>
+          <td>${esc(c.cliente_nombre||'—')}</td>
+          <td>${fmtSym(c.total,c.moneda)}</td>
+          <td>${badge(c.estatus)}</td>
+        </tr>`).join('')||'<tr><td colspan="5" style="color:#aaa;text-align:center;padding:20px">Sin cotizaciones aún</td></tr>'}
+        </tbody></table>
+      </div>
+    </div>`);
+  } catch(e){
+    setContent(`<div class="alert alert-err">❌ ${e.message}</div>`);
+  }
+}
+
+/* ══════════════ CLIENTES ══════════════ */
+async function clientes(){
+  setPage('Clientes');
+  const data = await api('/api/clientes').catch(()=>[]);
+  setContent(`
+  <div class="card">
+    <div class="card-header"><div class="card-title">👤 Clientes</div><button class="btn btn-primary" onclick="clienteForm()">➕ Nuevo</button></div>
+    <div class="card-body">
+      <div class="search-bar"><input class="search-input" placeholder="Buscar..." oninput="filterTable(this,'tblCli')"></div>
+      <div class="table-wrap"><table id="tblCli">
+        <thead><tr><th>Nombre</th><th>RFC</th><th>Contacto</th><th>Teléfono</th><th>Email</th><th>Ciudad</th><th>Acciones</th></tr></thead>
+        <tbody>${(data||[]).map(c=>`<tr>
+          <td><strong>${esc(c.nombre)}</strong></td>
+          <td>${esc(c.rfc||'—')}</td><td>${esc(c.contacto||'—')}</td>
+          <td>${esc(c.telefono||'—')}</td><td>${esc(c.email||'—')}</td><td>${esc(c.ciudad||'—')}</td>
+          <td class="btn-group">
+            <button class="btn btn-secondary btn-xs" onclick='clienteForm(${JSON.stringify(c)})'>✏</button>
+            <button class="btn btn-danger btn-xs" onclick="clienteDel(${c.id},'${esc(c.nombre)}')">🗑</button>
+          </td></tr>`).join('')}
+        </tbody></table></div>
+    </div>
+  </div>`);
+}
+function clienteForm(c=null){
+  openModal(c?'Editar Cliente':'Nuevo Cliente',`
+    <div class="form-grid form-grid-2">
+      <div class="field-group" style="grid-column:1/-1"><label class="field-required">Nombre</label><input id="c_nom" value="${esc(c?.nombre||'')}"></div>
+      <div class="field-group"><label>RFC</label><input id="c_rfc" value="${esc(c?.rfc||'')}"></div>
+      <div class="field-group"><label>Régimen Fiscal</label><input id="c_reg" value="${esc(c?.regimen_fiscal||'')}"></div>
+      <div class="field-group"><label>Contacto</label><input id="c_cont" value="${esc(c?.contacto||'')}"></div>
+      <div class="field-group"><label>Teléfono</label><input id="c_tel" value="${esc(c?.telefono||'')}"></div>
+      <div class="field-group" style="grid-column:1/-1"><label>Email</label><input id="c_email" type="email" value="${esc(c?.email||'')}"></div>
+      <div class="field-group" style="grid-column:1/-1"><label>Dirección</label><input id="c_dir" value="${esc(c?.direccion||'')}"></div>
+      <div class="field-group"><label>CP</label><input id="c_cp" value="${esc(c?.cp||'')}"></div>
+      <div class="field-group"><label>Ciudad</label><input id="c_ciudad" value="${esc(c?.ciudad||'')}"></div>
+    </div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+   <button class="btn btn-primary" onclick="clienteSave(${c?.id||'null'})">💾 Guardar</button>`);
+}
+async function clienteSave(id){
+  const b={nombre:document.getElementById('c_nom').value.trim(),rfc:document.getElementById('c_rfc').value.trim(),regimen_fiscal:document.getElementById('c_reg').value.trim(),contacto:document.getElementById('c_cont').value.trim(),telefono:document.getElementById('c_tel').value.trim(),email:document.getElementById('c_email').value.trim(),direccion:document.getElementById('c_dir').value.trim(),cp:document.getElementById('c_cp').value.trim(),ciudad:document.getElementById('c_ciudad').value.trim()};
+  if(!b.nombre){toast('Nombre requerido','err');return;}
+  try{ id?await api('/api/clientes/'+id,'PUT',b):await api('/api/clientes','POST',b); toast('Cliente guardado');closeModal();clientes();}
+  catch(e){toast(e.message,'err');}
+}
+async function clienteDel(id,n){
+  if(!confirm('¿Eliminar a '+n+'?'))return;
+  try{await api('/api/clientes/'+id,'DELETE');toast('Cliente eliminado','warn');clientes();}
+  catch(e){toast(e.message,'err');}
+}
+
+/* ══════════════ PROVEEDORES ══════════════ */
+async function proveedores(){
+  setPage('Proveedores');
+  const data = await api('/api/proveedores').catch(()=>[]);
+  setContent(`
+  <div class="card">
+    <div class="card-header"><div class="card-title">🏭 Proveedores</div><button class="btn btn-primary" onclick="provForm()">➕ Nuevo</button></div>
+    <div class="card-body">
+      <div class="search-bar"><input class="search-input" placeholder="Buscar..." oninput="filterTable(this,'tblProv')"></div>
+      <div class="table-wrap"><table id="tblProv">
+        <thead><tr><th>Nombre</th><th>RFC</th><th>Contacto</th><th>Teléfono</th><th>Email</th><th>Cond. Pago</th><th>Acciones</th></tr></thead>
+        <tbody>${(data||[]).map(p=>`<tr>
+          <td><strong>${esc(p.nombre)}</strong></td><td>${esc(p.rfc||'—')}</td>
+          <td>${esc(p.contacto||'—')}</td><td>${esc(p.telefono||'—')}</td>
+          <td>${esc(p.email||'—')}</td><td>${esc(p.condiciones_pago||'—')}</td>
+          <td class="btn-group"><button class="btn btn-secondary btn-xs" onclick='provForm(${JSON.stringify(p)})'>✏</button></td>
+        </tr>`).join('')}
+        </tbody></table></div>
+    </div>
+  </div>`);
+}
+function provForm(p=null){
+  openModal(p?'Editar Proveedor':'Nuevo Proveedor',`
+    <div class="form-grid form-grid-2">
+      <div class="field-group" style="grid-column:1/-1"><label class="field-required">Nombre</label><input id="p_nom" value="${esc(p?.nombre||'')}"></div>
+      <div class="field-group"><label>RFC</label><input id="p_rfc" value="${esc(p?.rfc||'')}"></div>
+      <div class="field-group"><label>Contacto</label><input id="p_cont" value="${esc(p?.contacto||'')}"></div>
+      <div class="field-group"><label>Teléfono</label><input id="p_tel" value="${esc(p?.telefono||'')}"></div>
+      <div class="field-group"><label>Email</label><input id="p_email" type="email" value="${esc(p?.email||'')}"></div>
+      <div class="field-group"><label>Cond. de Pago</label><input id="p_cond" value="${esc(p?.condiciones_pago||'')}"></div>
+      <div class="field-group" style="grid-column:1/-1"><label>Dirección</label><input id="p_dir" value="${esc(p?.direccion||'')}"></div>
+    </div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+   <button class="btn btn-primary" onclick="provSave(${p?.id||'null'})">💾 Guardar</button>`);
+}
+async function provSave(id){
+  const b={nombre:document.getElementById('p_nom').value.trim(),rfc:document.getElementById('p_rfc').value.trim(),contacto:document.getElementById('p_cont').value.trim(),telefono:document.getElementById('p_tel').value.trim(),email:document.getElementById('p_email').value.trim(),condiciones_pago:document.getElementById('p_cond').value.trim(),direccion:document.getElementById('p_dir').value.trim()};
+  if(!b.nombre){toast('Nombre requerido','err');return;}
+  try{ id?await api('/api/proveedores/'+id,'PUT',b):await api('/api/proveedores','POST',b); toast('Proveedor guardado');closeModal();proveedores();}
+  catch(e){toast(e.message,'err');}
+}
+
+/* ══════════════ PROYECTOS ══════════════ */
+
+/* ══════════════════════════════════════════════════════
+   PROYECTOS — completo
+══════════════════════════════════════════════════════ */
+let _proySel=null,_proyData=null;
+async function proyectos(){
+  setPage('Proyectos');
+  const [data,clts]=await Promise.all([
+    api('/api/proyectos').catch(()=>[]),
+    api('/api/clientes').catch(()=>[])
+  ]);
+  window._proyClientes=clts||[];
+  _proySel=null;_proyData=null;
+  setContent(`
+  <div class="card">
+    <div class="card-header"><div class="card-title">📁 Proyectos</div></div>
+    <div class="card-body">
+      <div class="btn-toolbar">
+        <button class="btn btn-primary"   onclick="proyForm()">➕ Nueva</button>
+        <button class="btn btn-secondary" onclick="proyEdit()">✏️ Modificar</button>
+        <button class="btn btn-secondary" onclick="proyEstatus()">🔄 Cambiar Estatus</button>
+        <button class="btn btn-danger btn-sm" onclick="proyDel()">🗑 Eliminar</button>
+      </div>
+      <div class="search-bar" style="margin-top:10px">
+        <input class="search-input" placeholder="Buscar proyecto o cliente..." oninput="filterTable(this,'tblProy')">
+        <select class="search-input" style="max-width:160px" onchange="filterByStatus(this,'tblProy',4)">
+          <option value="">Todos los estatus</option>
+          <option>activo</option><option>pausado</option><option>cerrado</option><option>cancelado</option>
+        </select>
+      </div>
+      <div class="table-wrap"><table id="tblProy">
+        <thead><tr><th>ID</th><th>Nombre</th><th>Cliente</th><th>Responsable</th><th>Estatus</th><th>Fecha</th></tr></thead>
+        <tbody>${(data||[]).map(p=>`<tr class="row-sel" onclick="selProy(${p.id},this)" data-id="${p.id}" data-row='${JSON.stringify(p).replace(/'/g,"&#39;")}'>
+          <td>${p.id}</td>
+          <td><strong>${esc(p.nombre)}</strong></td>
+          <td>${esc(p.cliente_nombre||'—')}</td>
+          <td>${esc(p.responsable||'VEF Automatización')}</td>
+          <td>${badge(p.estatus)}</td>
+          <td>${fmtDate(p.fecha||p.fecha_creacion||p.created_at)}</td>
+        </tr>`).join('')||'<tr><td colspan="6" style="color:#aaa;text-align:center;padding:30px">Sin proyectos registrados</td></tr>'}
+        </tbody></table></div>
+      <div id="proyResumen" style="margin-top:10px"></div>
+    </div>
+  </div>`);
+}
+function selProy(id,row){
+  _proySel=id;
+  const d=JSON.parse(row.dataset.row||'{}'); _proyData=d;
+  document.querySelectorAll('#tblProy tr.row-sel').forEach(r=>r.classList.remove('selected'));
+  row.classList.add('selected');
+  const r=document.getElementById('proyResumen');
+  if(r) r.innerHTML=`<div class="alert alert-info" style="margin:0">📁 <strong>${esc(d.nombre)}</strong> — ${esc(d.cliente_nombre||'—')} — ${badge(d.estatus)}</div>`;
+}
+function proyForm(ed=null){
+  const clts=(window._proyClientes||[]).map(c=>`<option value="${c.id}" ${ed&&ed.cliente_id==c.id?'selected':''}>${esc(c.nombre)}</option>`).join('');
+  openModal(ed?'Modificar Proyecto':'Nuevo Proyecto',`
+    <div class="form-grid form-grid-2">
+      <div class="field-group" style="grid-column:1/-1"><label class="field-required">Nombre del Proyecto</label><input id="pn" value="${esc(ed?.nombre||'')}"></div>
+      <div class="field-group"><label>Cliente</label><select id="pc"><option value="">-- Sin cliente --</option>${clts}</select></div>
+      <div class="field-group"><label>Responsable</label><input id="pr" value="${esc(ed?.responsable||'VEF Automatización')}"></div>
+      <div class="field-group"><label>Estatus</label><select id="pe">
+        ${['activo','pausado','cerrado','cancelado'].map(s=>`<option ${(ed?.estatus||'activo')===s?'selected':''}>${s}</option>`).join('')}
+      </select></div>
+    </div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+   <button class="btn btn-primary" onclick="proySave(${ed?.id||''})">💾 Guardar</button>`);
+}
+async function proySave(id=''){
+  const b={nombre:ge('pn').value.trim(),cliente_id:parseInt(ge('pc').value)||null,responsable:ge('pr').value.trim(),estatus:ge('pe').value};
+  if(!b.nombre){toast('Nombre requerido','err');return;}
+  try{id?await api('/api/proyectos/'+id,'PUT',b):await api('/api/proyectos','POST',b);toast('Proyecto guardado');closeModal();proyectos();}catch(e){toast(e.message,'err');}
+}
+async function proyEdit(){
+  if(!_proySel){toast('Selecciona un proyecto primero','err');return;}
+  proyForm(_proyData);
+}
+function proyEstatus(){
+  if(!_proySel){toast('Selecciona un proyecto primero','err');return;}
+  openModal('Cambiar Estatus',`
+    <p style="margin-bottom:12px;color:#666">Actual: ${badge(_proyData?.estatus||'activo')}</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      ${['activo','pausado','cerrado','cancelado'].map(s=>`<button class="btn btn-secondary" onclick="proySetEst('${s}')">${badge(s)}</button>`).join('')}
+    </div>`);
+}
+async function proySetEst(est){
+  try{await api('/api/proyectos/'+_proySel,'PUT',{..._proyData,estatus:est});toast('Estatus actualizado');closeModal();proyectos();}catch(e){toast(e.message,'err');}
+}
+async function proyDel(){
+  if(!_proySel){toast('Selecciona un proyecto primero','err');return;}
+  if(!confirm(`¿Eliminar proyecto "${_proyData?.nombre}"?`))return;
+  try{await api('/api/proyectos/'+_proySel,'DELETE');toast('Proyecto eliminado');proyectos();}catch(e){toast(e.message,'err');}
+}
+
+/* ══════════════════════════════════════════════════════
+   COTIZACIONES — con barra completa de botones
+══════════════════════════════════════════════════════ */
+let _cotSel=null,_cotData=null;
+window._items=[];
+async function cotizaciones(){
+  setPage('Cotizaciones');
+  const [data,proys]=await Promise.all([
+    api('/api/cotizaciones').catch(()=>[]),
+    api('/api/proyectos').catch(()=>[])
+  ]);
+  window._cotProys=proys||[];
+  _cotSel=null;_cotData=null;
+  setContent(`
+  <div class="card">
+    <div class="card-header"><div class="card-title">📄 Cotizaciones</div></div>
+    <div class="card-body">
+      <div class="btn-toolbar">
+        <button class="btn btn-primary"   onclick="cotForm()">➕ Nueva</button>
+        <button class="btn btn-secondary" onclick="cotModificar()">✏️ Modificar</button>
+        <button class="btn btn-secondary" onclick="cotDetalle()">🔍 Ver Detalle</button>
+        <button class="btn btn-secondary" onclick="cotCambiarEstatus()">🔄 Cambiar Estatus</button>
+        <button class="btn btn-secondary" onclick="cotSeguimiento()">📌 Seguimiento</button>
+        <button class="btn btn-dark"      onclick="cotPDF()">📄 Generar PDF</button>
+        <button class="btn btn-secondary" onclick="cotEmail()">✉️ Enviar Correo</button>
+        <button class="btn btn-danger btn-sm" onclick="cotEliminar()">🗑 Eliminar</button>
+      </div>
+      <div id="cotResumen" style="margin-top:10px"></div>
+      <div class="search-bar" style="margin-top:8px">
+        <input class="search-input" placeholder="Buscar número, cliente..." oninput="filterTable(this,'tblCot')">
+        <select class="search-input" style="max-width:150px" onchange="filterByStatus(this,'tblCot',4)">
+          <option value="">Todos</option><option>borrador</option><option>enviada</option><option>aprobada</option><option>rechazada</option>
+        </select>
+      </div>
+      <div class="table-wrap"><table id="tblCot">
+        <thead><tr><th>Número</th><th>Proyecto</th><th>Cliente</th><th>Total</th><th>Estatus</th><th>Fecha</th></tr></thead>
+        <tbody>${(data||[]).map(c=>`<tr class="row-sel" onclick="selCot(${c.id},this)" data-id="${c.id}" data-row='${JSON.stringify(c).replace(/'/g,"&#39;")}'>
+          <td><strong>${esc(c.numero_cotizacion||'—')}</strong></td>
+          <td>${esc(c.proyecto_nombre||'—')}</td>
+          <td>${esc(c.cliente_nombre||'—')}</td>
+          <td>${fmtSym(c.total,c.moneda)}</td>
+          <td>${badge(c.estatus)}</td>
+          <td>${fmtDate(c.fecha_emision||c.created_at)}</td>
+        </tr>`).join('')||'<tr><td colspan="6" style="color:#aaa;text-align:center;padding:30px">Sin cotizaciones registradas</td></tr>'}
+        </tbody></table></div>
+    </div>
+  </div>`);
+}
+function selCot(id,row){
+  _cotSel=id;_cotData=JSON.parse(row.dataset.row||'{}');
+  document.querySelectorAll('#tblCot tr.row-sel').forEach(r=>r.classList.remove('selected'));
+  row.classList.add('selected');
+  const r=document.getElementById('cotResumen');
+  if(r) r.innerHTML=`<div class="alert alert-info" style="margin:0">📄 <strong>${esc(_cotData.numero_cotizacion)}</strong> — ${esc(_cotData.cliente_nombre||'—')} — ${fmtSym(_cotData.total,_cotData.moneda)} — ${badge(_cotData.estatus)}</div>`;
+}
+function cotForm(ed=null){
+  window._items=ed?.items||[];
+  const pOpts=(window._cotProys||[]).map(p=>`<option value="${p.id}" ${ed?.proyecto_id==p.id?'selected':''}>${esc(p.nombre)} — ${esc(p.cliente_nombre||'—')}</option>`).join('');
+  openModalLg(ed?`Modificar ${ed.numero_cotizacion}`:'Nueva Cotización',`
+    <div class="form-grid form-grid-2" style="gap:12px">
+      <div class="field-group" style="grid-column:1/-1"><label class="field-required">Proyecto</label>
+        <select id="cq_p"><option value="">-- Seleccionar Proyecto --</option>${pOpts}</select></div>
+      <div class="field-group"><label>Moneda</label>
+        <div style="display:flex;gap:20px;padding:6px 0">
+          <label><input type="radio" name="cq_m" value="USD" ${(ed?.moneda||'USD')==='USD'?'checked':''}> USD</label>
+          <label><input type="radio" name="cq_m" value="MXN" ${ed?.moneda==='MXN'?'checked':''}> MXN</label>
+        </div></div>
+      <div class="field-group"><label>Válida Hasta</label><input id="cq_v" type="date" value="${ed?.validez_hasta?.slice(0,10)||''}"></div>
+      <div class="field-group" style="grid-column:1/-1"><label class="field-required">Alcance Técnico</label><textarea id="cq_a" rows="3">${esc(ed?.alcance_tecnico||'')}</textarea></div>
+      <div class="field-group" style="grid-column:1/-1"><label>Condiciones de Pago</label><textarea id="cq_cp" rows="2">${esc(ed?.condiciones_pago||'50% anticipo, 50% contra entrega')}</textarea></div>
+      <div class="field-group" style="grid-column:1/-1"><label>Garantía</label><textarea id="cq_g" rows="2">${esc(ed?.garantia||'12 meses a partir de la instalación')}</textarea></div>
+      <div class="field-group" style="grid-column:1/-1"><label>Servicio Postventa</label><textarea id="cq_sp" rows="2">${esc(ed?.servicio_postventa||'')}</textarea></div>
+      <div class="field-group" style="grid-column:1/-1"><label>Notas Importantes</label><textarea id="cq_n" rows="2">${esc(ed?.notas_importantes||'')}</textarea></div>
+      <div class="field-group" style="grid-column:1/-1"><label>Comentarios Generales</label><textarea id="cq_c" rows="2">${esc(ed?.comentarios_generales||'')}</textarea></div>
+    </div>
+    <div style="margin-top:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <strong style="color:var(--azul)">📋 Partidas / Items</strong>
+        <button class="btn btn-primary btn-sm" onclick="addItem()">➕ Agregar Item</button>
+      </div>
+      <div class="table-wrap"><table class="items-tbl" id="itemsTbl">
+        <thead><tr><th>Descripción</th><th style="width:80px">Cant.</th><th style="width:130px">P.U.</th><th style="width:130px">Total</th><th style="width:36px"></th></tr></thead>
+        <tbody id="itemsBody"></tbody>
+      </table></div>
+      <div class="total-box"><span class="label">TOTAL</span><span class="amount" id="totalAmt">$0.00</span></div>
+    </div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+   <button class="btn btn-primary" onclick="cotSave(${ed?.id||''})">💾 Guardar Cotización</button>`);
+  renderItems();
+}
+async function cotModificar(){
+  if(!_cotSel){toast('Selecciona una cotización','err');return;}
+  const full=await api('/api/cotizaciones/'+_cotSel).catch(()=>null);
+  if(!full){toast('No se pudo cargar la cotización','err');return;}
+  // Asegurar que lista de proyectos esté disponible
+  if(!(window._cotProys||[]).length) window._cotProys=await api('/api/proyectos').catch(()=>[]);
+  cotForm(full);
+}
+async function cotSave(id=''){
+  const alc=ge('cq_a')?.value.trim();
+  if(!alc){toast('Alcance técnico es requerido','err');return;}
+  const mon=document.querySelector('[name=cq_m]:checked')?.value||'USD';
+  const body={
+    proyecto_id:parseInt(ge('cq_p')?.value)||null,moneda:mon,
+    alcance_tecnico:alc,
+    condiciones_pago:ge('cq_cp')?.value.trim(),
+    validez_hasta:ge('cq_v')?.value||null,
+    garantia:ge('cq_g')?.value.trim(),
+    servicio_postventa:ge('cq_sp')?.value.trim(),
+    notas_importantes:ge('cq_n')?.value.trim(),
+    comentarios_generales:ge('cq_c')?.value.trim(),
+    items:window._items.map(it=>({descripcion:it.d,cantidad:parseFloat(it.q)||1,precio_unitario:parseFloat(it.p)||0}))
+  };
+  try{id?await api('/api/cotizaciones/'+id,'PUT',body):await api('/api/cotizaciones','POST',body);toast('Cotización guardada ✓');closeModal();cotizaciones();}catch(e){toast(e.message,'err');}
+}
+async function cotDetalle(){
+  if(!_cotSel){toast('Selecciona una cotización','err');return;}
+  const c=await api('/api/cotizaciones/'+_cotSel).catch(()=>null);
+  if(!c){toast('No se pudo cargar','err');return;}
+  const rows=(c.items||[]).map(it=>`<tr><td>${esc(it.descripcion||'—')}</td><td style="text-align:center">${it.cantidad}</td><td style="text-align:right">${fmtSym(it.precio_unitario,c.moneda)}</td><td style="text-align:right;font-weight:700">${fmtSym(it.total,c.moneda)}</td></tr>`).join('')||'<tr><td colspan="4" style="color:#aaa;text-align:center">Sin items</td></tr>';
+  const segs=(c.seguimientos||[]).map(s=>`<li><strong>${fmtDate(s.fecha)}</strong> [${esc(s.tipo||'nota')}] ${esc(s.notas||'')}${s.proxima_accion?` ➜ <em>${esc(s.proxima_accion)}</em>`:''}</li>`).join('')||'<li style="color:#aaa">Sin seguimientos registrados</li>';
+  openModalLg(`Detalle: ${esc(c.numero_cotizacion)}`,`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;font-size:.9rem">
+      <div><strong>Cliente:</strong> ${esc(c.cliente_nombre||'—')}</div>
+      <div><strong>Proyecto:</strong> ${esc(c.proyecto_nombre||'—')}</div>
+      <div><strong>Total:</strong> <span style="font-size:1.15rem;font-weight:700;color:var(--azul)">${fmtSym(c.total,c.moneda)} ${c.moneda||'USD'}</span></div>
+      <div><strong>Estatus:</strong> ${badge(c.estatus)}</div>
+      <div><strong>Emisión:</strong> ${fmtDate(c.fecha_emision)}</div>
+      <div><strong>Válida hasta:</strong> ${fmtDate(c.validez_hasta)||'—'}</div>
+    </div>
+    ${c.alcance_tecnico?`<div style="background:#f4f6fa;padding:10px;border-radius:6px;margin-bottom:12px;font-size:.85rem"><strong>Alcance Técnico:</strong><br>${esc(c.alcance_tecnico)}</div>`:''}
+    <div class="table-wrap"><table><thead><tr><th>Descripción</th><th>Cant.</th><th>P.U.</th><th>Total</th></tr></thead><tbody>${rows}</tbody>
+      <tfoot><tr><td colspan="3" style="text-align:right;font-weight:700;padding:8px">TOTAL ${c.moneda||'USD'}</td><td style="text-align:right;font-weight:700;font-size:1.1rem;padding:8px">${fmtSym(c.total,c.moneda)}</td></tr></tfoot>
+    </table></div>
+    <div style="margin-top:14px"><strong>Seguimientos:</strong><ul style="margin-top:6px;padding-left:18px;font-size:.85rem">${segs}</ul></div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cerrar</button>
+   <button class="btn btn-dark" onclick="closeModal();cotPDF()">📄 Generar PDF</button>`);
+}
+function cotCambiarEstatus(){
+  if(!_cotSel){toast('Selecciona una cotización','err');return;}
+  openModal('Cambiar Estatus Cotización',`
+    <p style="margin-bottom:12px;color:#666">Actual: ${badge(_cotData?.estatus||'borrador')}</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      ${['borrador','enviada','aprobada','rechazada'].map(s=>`<button class="btn btn-secondary" onclick="cotSetEst('${s}')">${badge(s)}</button>`).join('')}
+    </div>`);
+}
+async function cotSetEst(est){
+  try{
+    await api('/api/cotizaciones/'+_cotSel,'PUT',{estatus:est});
+    // Al aprobar: descontar del inventario automáticamente
+    if(est==='aprobada'){
+      await cotDescontarInventario(_cotSel);
+    }
+    toast('Estatus actualizado');closeModal();cotizaciones();
+  }catch(e){toast(e.message,'err');}
+}
+
+async function cotDescontarInventario(cotId){
+  try {
+    // Obtener items de la cotización
+    const cot = await api('/api/cotizaciones/'+cotId).catch(()=>null);
+    if(!cot||!cot.items||!cot.items.length) return;
+    // Obtener inventario para cruzar por nombre/descripción
+    const inv = await api('/api/inventario').catch(()=>[]);
+    let descuentos=0, nomatch=[];
+    for(const item of cot.items){
+      const desc=(item.descripcion||'').toLowerCase().trim();
+      // Buscar coincidencia exacta o parcial en inventario
+      const prod = inv.find(p=>
+        (p.nombre||'').toLowerCase()===desc ||
+        (p.nombre||'').toLowerCase().includes(desc) ||
+        desc.includes((p.nombre||'').toLowerCase().substring(0,6))
+      );
+      if(prod){
+        const cant=parseFloat(item.cantidad)||1;
+        const stock=parseFloat(prod.qty_actual??prod.cantidad_actual??prod.stock_actual??0);
+        if(stock>=cant){
+          await api('/api/inventario/'+prod.id+'/movimiento','POST',{
+            tipo:'salida',cantidad:cant,
+            referencia:cot.numero_cotizacion,
+            notas:`Salida por cotización aprobada: ${cot.numero_cotizacion}`
+          }).catch(()=>{});
+          descuentos++;
+        } else {
+          nomatch.push(`${item.descripcion} (stock insuf: ${stock})`);
+        }
+      } else {
+        nomatch.push(item.descripcion);
+      }
+    }
+    if(descuentos>0) toast(`📦 ${descuentos} item(s) descontados del inventario`,'');
+    if(nomatch.length>0){
+      setTimeout(()=>toast(`⚠ Sin coincidencia en inventario: ${nomatch.slice(0,2).join(', ')}${nomatch.length>2?'...':''}`)  ,1500);
+    }
+    // Limpiar caché de inventario para refrescar
+    window._invCache=null;
+  } catch(e){ console.warn('Descuento inventario:', e.message); }
+}
+function cotSeguimiento(){
+  if(!_cotSel){toast('Selecciona una cotización','err');return;}
+  openModal('Agregar Seguimiento',`
+    <div class="form-grid">
+      <div class="field-group"><label>Tipo</label>
+        <select id="st"><option>llamada</option><option>correo</option><option>reunión</option><option>nota</option><option>visita</option></select></div>
+      <div class="field-group"><label class="field-required">Notas</label><textarea id="sn" rows="3"></textarea></div>
+      <div class="field-group"><label>Próxima Acción</label><input id="sp"></div>
+    </div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+   <button class="btn btn-primary" onclick="cotSegGuardar()">💾 Guardar</button>`);
+}
+async function cotSegGuardar(){
+  const b={tipo:ge('st').value,notas:ge('sn').value.trim(),proxima_accion:ge('sp').value.trim()};
+  if(!b.notas){toast('Notas son requeridas','err');return;}
+  try{await api('/api/cotizaciones/'+_cotSel+'/seguimiento','POST',b);toast('Seguimiento guardado ✓');closeModal();}catch(e){toast(e.message,'err');}
+}
+async function cotPDF(){
+  if(!_cotSel){toast('Selecciona una cotización','err');return;}
+  window.open('/api/cotizaciones/'+_cotSel+'/pdf?token='+encodeURIComponent(localStorage.getItem('vef_token')||''),'_blank');
+}
+function cotEmail(){
+  if(!_cotSel){toast('Selecciona una cotización','err');return;}
+  openModal('Enviar Cotización por Correo',`
+    <div class="form-grid">
+      <div class="field-group"><label class="field-required">Para (To)</label><input id="em_t" type="email" value="${esc(_cotData?.cliente_email||'')}"></div>
+      <div class="field-group"><label>CC</label><input id="em_c" type="email"></div>
+      <div class="field-group" style="grid-column:1/-1"><label>Mensaje</label><textarea id="em_m" rows="3">Estimado cliente, adjuntamos la cotización solicitada. Quedamos a sus órdenes.</textarea></div>
+    </div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+   <button class="btn btn-primary" onclick="cotEmailSend()">✉️ Enviar</button>`);
+}
+async function cotEmailSend(){
+  const to=ge('em_t').value.trim();if(!to){toast('Destinatario requerido','err');return;}
+  try{await api('/api/cotizaciones/'+_cotSel+'/email','POST',{to,cc:ge('em_c').value.trim()||undefined,mensaje:ge('em_m').value.trim()});toast('Correo enviado ✓');closeModal();}catch(e){toast(e.message,'err');}
+}
+async function cotEliminar(){
+  if(!_cotSel){toast('Selecciona una cotización','err');return;}
+  if(!confirm(`¿Eliminar cotización ${_cotData?.numero_cotizacion}? Esta acción no se puede deshacer.`))return;
+  try{await api('/api/cotizaciones/'+_cotSel,'DELETE');toast('Cotización eliminada');cotizaciones();}catch(e){toast(e.message,'err');}
+}
+
+/* ══════════════════════════════════════════════════════
+   ORDENES DE COMPRA internas (sección legacy)
+══════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════
+   ÓRDENES Y FACTURAS — Módulo completo
+══════════════════════════════════════════════════════ */
+let _facSel=null,_facData=null;
+async function ordenes(){
+  setPage('Órdenes y Facturas');
+  const [facts,cots,clts]=await Promise.all([
+    api('/api/facturas').catch(()=>[]),
+    api('/api/cotizaciones').catch(()=>[]),
+    api('/api/clientes').catch(()=>[])
+  ]);
+  window._facCots=cots||[];
+  window._facClts=clts||[];
+  _facSel=null;_facData=null;
+  const pendTotal=(facts||[]).filter(f=>f.estatus==='pendiente'||f.estatus==='parcial').reduce((s,f)=>s+parseFloat(f.total||0),0);
+  setContent(`
+  <div class="card">
+    <div class="card-header"><div class="card-title">🧾 Órdenes y Facturas</div></div>
+    <div class="card-body">
+      <div class="btn-toolbar">
+        <button class="btn btn-primary"   onclick="facForm()">➕ Nueva Factura</button>
+        <button class="btn btn-secondary" onclick="facDetalle()">🔍 Ver Detalle</button>
+        <button class="btn btn-secondary" onclick="facEstatus()">🔄 Cambiar Estatus</button>
+        <button class="btn btn-success"   onclick="facPago()">💰 Registrar Pago</button>
+        <button class="btn btn-secondary" onclick="facVerPagos()">📋 Ver Pagos</button>
+        <button class="btn btn-dark"      onclick="facPDF()">📄 Generar PDF</button>
+        <button class="btn btn-danger btn-sm" onclick="facEliminar()">🗑 Eliminar</button>
+      </div>
+      <div id="facResumen" style="margin-top:10px"></div>
+      <div style="display:flex;gap:16px;margin:12px 0;flex-wrap:wrap">
+        <div class="stat-card" style="flex:1;min-width:140px">
+          <div class="stat-icon orange">🧾</div>
+          <div><div class="stat-val" style="font-size:1.2rem">${(facts||[]).length}</div><div class="stat-lbl">Total Facturas</div></div>
+        </div>
+        <div class="stat-card" style="flex:1;min-width:140px">
+          <div class="stat-icon" style="background:#fdecea">⏳</div>
+          <div><div class="stat-val" style="font-size:1.2rem;color:var(--naranja,#e67e22)">${(facts||[]).filter(f=>f.estatus==='pendiente').length}</div><div class="stat-lbl">Pendientes</div></div>
+        </div>
+        <div class="stat-card" style="flex:1;min-width:140px">
+          <div class="stat-icon green">✅</div>
+          <div><div class="stat-val" style="font-size:1.2rem;color:var(--verde,#27ae60)">${(facts||[]).filter(f=>f.estatus==='pagada').length}</div><div class="stat-lbl">Pagadas</div></div>
+        </div>
+        <div class="stat-card" style="flex:1;min-width:180px">
+          <div class="stat-icon orange">💵</div>
+          <div><div class="stat-val" style="font-size:1.1rem">${fmtSym(pendTotal,'USD')}</div><div class="stat-lbl">Por cobrar</div></div>
+        </div>
+      </div>
+      <div class="search-bar">
+        <input class="search-input" placeholder="Buscar número, cliente..." oninput="filterTable(this,'tblFac')">
+        <select class="search-input" style="max-width:150px" onchange="filterByStatus(this,'tblFac',4)">
+          <option value="">Todos</option><option>pendiente</option><option>parcial</option><option>pagada</option><option>vencida</option>
+        </select>
+      </div>
+      <div class="table-wrap"><table id="tblFac">
+        <thead><tr><th>Número</th><th>Cliente</th><th>Cotización</th><th>Total</th><th>Estatus</th><th>Pagado</th><th>Saldo</th><th>Emisión</th><th>Vencimiento</th></tr></thead>
+        <tbody>${(facts||[]).map(f=>{
+          const saldo=parseFloat(f.total||0)-parseFloat(f.pagado||0);
+          const venc=f.fecha_vencimiento&&new Date(f.fecha_vencimiento)<new Date()&&f.estatus!=='pagada';
+          return `<tr class="row-sel${venc?' row-warn':''}" onclick="selFac(${f.id},this)" data-id="${f.id}" data-row='${JSON.stringify(f).replace(/'/g,"&#39;")}'>
+            <td><strong>${esc(f.numero_factura||'—')}</strong></td>
+            <td>${esc(f.cliente_nombre||'—')}</td>
+            <td>${esc(f.numero_cotizacion||'—')}</td>
+            <td>${fmtSym(f.total,f.moneda)}</td>
+            <td>${badge(venc?'vencida':f.estatus)}</td>
+            <td style="color:var(--verde,#27ae60);font-weight:600">${fmtSym(f.pagado||0,f.moneda)}</td>
+            <td style="color:${saldo>0?'var(--rojo,#e74c3c)':'var(--verde,#27ae60)'};font-weight:700">${fmtSym(saldo,f.moneda)}</td>
+            <td>${fmtDate(f.fecha_emision)}</td>
+            <td>${fmtDate(f.fecha_vencimiento)||'—'}</td>
+          </tr>`;
+        }).join('')||'<tr><td colspan="9" style="color:#aaa;text-align:center;padding:30px">Sin facturas registradas</td></tr>'}
+        </tbody></table></div>
+    </div>
+  </div>`);
+}
+
+function selFac(id,row){
+  _facSel=id;_facData=JSON.parse(row.dataset.row||'{}');
+  document.querySelectorAll('#tblFac tr.row-sel').forEach(r=>r.classList.remove('selected'));
+  row.classList.add('selected');
+  const r=document.getElementById('facResumen');
+  if(r){
+    const saldo=parseFloat(_facData.total||0)-parseFloat(_facData.pagado||0);
+    r.innerHTML=`<div class="alert alert-info" style="margin:0">
+      🧾 <strong>${esc(_facData.numero_factura)}</strong> — ${esc(_facData.cliente_nombre||'—')} —
+      Total: <strong>${fmtSym(_facData.total,_facData.moneda)}</strong> —
+      Saldo: <strong style="color:${saldo>0?'var(--rojo,#e74c3c)':'var(--verde,#27ae60)'}">${fmtSym(saldo,_facData.moneda)}</strong> —
+      ${badge(_facData.estatus)}
+    </div>`;
+  }
+}
+
+function facForm(){
+  const cotOpts=(window._facCots||[]).map(c=>`<option value="${c.id}" data-cli="${c.cliente_nombre||''}" data-cli-id="${c.cliente_id||''}" data-total="${c.total||0}" data-mon="${c.moneda||'USD'}">${esc(c.numero_cotizacion)} — ${esc(c.cliente_nombre||'—')} — ${fmtSym(c.total,c.moneda)}</option>`).join('');
+  const cliOpts=(window._facClts||[]).map(c=>`<option value="${c.id}">${esc(c.nombre)}</option>`).join('');
+  openModalLg('Nueva Factura',`
+    <div class="form-grid form-grid-2" style="gap:12px">
+      <div class="field-group" style="grid-column:1/-1">
+        <label>Cotización relacionada (opcional)</label>
+        <select id="fc_cot" onchange="facAutoFill()"><option value="">-- Sin cotización --</option>${cotOpts}</select>
+      </div>
+      <div class="field-group" style="grid-column:1/-1">
+        <label>Cliente</label>
+        <select id="fc_cli"><option value="">-- Seleccionar --</option>${cliOpts}</select>
+      </div>
+      <div class="field-group"><label>Moneda</label>
+        <div style="display:flex;gap:20px;padding:6px 0">
+          <label><input type="radio" name="fc_mon" value="USD" checked> USD</label>
+          <label><input type="radio" name="fc_mon" value="MXN"> MXN</label>
+        </div></div>
+      <div class="field-group"><label>Fecha Vencimiento</label><input id="fc_venc" type="date"></div>
+      <div class="field-group"><label>Subtotal</label><input id="fc_sub" type="text" inputmode="decimal" value="0" oninput="facCalcTotal()"></div>
+      <div class="field-group"><label>IVA (16%)</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="fc_iva" type="text" inputmode="decimal" value="0" oninput="facCalcTotal()" style="flex:1">
+          <button class="btn btn-secondary btn-sm" onclick="facAplicarIVA()" type="button">Auto 16%</button>
+        </div></div>
+      <div class="field-group"><label>Total</label>
+        <input id="fc_tot" type="text" inputmode="decimal" value="0" style="font-weight:700;font-size:1.1rem;color:var(--azul)">
+      </div>
+      <div class="field-group" style="grid-column:1/-1"><label>Notas</label><textarea id="fc_notas" rows="2"></textarea></div>
+    </div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+   <button class="btn btn-primary" onclick="facSave()">💾 Crear Factura</button>`);
+}
+
+function facAutoFill(){
+  const sel=ge('fc_cot');
+  const opt=sel.options[sel.selectedIndex];
+  if(!opt.value) return;
+  const total=parseFloat(opt.dataset.total)||0;
+  const cliId=opt.dataset.cliId||'';
+  const mon=opt.dataset.mon||'USD';
+  if(ge('fc_sub')) ge('fc_sub').value=total;
+  if(ge('fc_tot')) ge('fc_tot').value=total;
+  if(mon==='MXN') document.querySelector('[name=fc_mon][value=MXN]').checked=true;
+  else document.querySelector('[name=fc_mon][value=USD]').checked=true;
+  // Select cliente
+  if(cliId) ge('fc_cli').value=cliId;
+}
+function facAplicarIVA(){
+  const sub=toNum(ge('fc_sub')?.value||0);
+  const iva=sub*0.16;
+  if(ge('fc_iva')) ge('fc_iva').value=iva.toFixed(2);
+  if(ge('fc_tot')) ge('fc_tot').value=(sub+iva).toFixed(2);
+}
+function facCalcTotal(){
+  const sub=toNum(ge('fc_sub')?.value||0);
+  const iva=toNum(ge('fc_iva')?.value||0);
+  if(ge('fc_tot')) ge('fc_tot').value=(sub+iva).toFixed(2);
+}
+
+async function facSave(){
+  const total=toNum(ge('fc_tot').value);
+  if(!total){toast('El total no puede ser cero','err');return;}
+  const mon=document.querySelector('[name=fc_mon]:checked')?.value||'USD';
+  const b={cotizacion_id:parseInt(ge('fc_cot').value)||null,cliente_id:parseInt(ge('fc_cli').value)||null,
+    moneda:mon,subtotal:toNum(ge('fc_sub').value),iva:toNum(ge('fc_iva').value),total,
+    fecha_vencimiento:ge('fc_venc').value||null,notas:ge('fc_notas').value.trim()};
+  try{await api('/api/facturas','POST',b);toast('Factura creada ✓');closeModal();ordenes();}catch(e){toast(e.message,'err');}
+}
+
+async function facDetalle(){
+  if(!_facSel){toast('Selecciona una factura','err');return;}
+  const f=await api('/api/facturas/'+_facSel).catch(()=>_facData);
+  const pagos=await api('/api/facturas/'+_facSel+'/pagos').catch(()=>[]);
+  const saldo=parseFloat(f?.total||0)-parseFloat(f?.pagado||(pagos||[]).reduce((s,p)=>s+parseFloat(p.monto||0),0)||0);
+  openModalLg(`Detalle Factura: ${esc(f?.numero_factura||'—')}`,`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;font-size:.9rem">
+      <div><strong>Cliente:</strong> ${esc(f?.cliente_nombre||'—')}</div>
+      <div><strong>Cotización:</strong> ${esc(f?.numero_cotizacion||'—')}</div>
+      <div><strong>Total:</strong> <span style="font-size:1.15rem;font-weight:700;color:var(--azul)">${fmtSym(f?.total,f?.moneda)}</span></div>
+      <div><strong>Estatus:</strong> ${badge(f?.estatus||'pendiente')}</div>
+      <div><strong>Emisión:</strong> ${fmtDate(f?.fecha_emision)}</div>
+      <div><strong>Vencimiento:</strong> ${fmtDate(f?.fecha_vencimiento)||'—'}</div>
+      <div><strong>Subtotal:</strong> ${fmtSym(f?.subtotal,f?.moneda)}</div>
+      <div><strong>IVA:</strong> ${fmtSym(f?.iva,f?.moneda)}</div>
+    </div>
+    ${f?.notas?`<div style="background:#f4f6fa;padding:10px;border-radius:6px;margin-bottom:12px;font-size:.85rem"><strong>Notas:</strong> ${esc(f.notas)}</div>`:''}
+    <strong>Historial de Pagos:</strong>
+    <div class="table-wrap" style="margin-top:8px"><table>
+      <thead><tr><th>Fecha</th><th>Monto</th><th>Método</th><th>Referencia</th><th>Notas</th></tr></thead>
+      <tbody>${(pagos||[]).map(p=>`<tr>
+        <td>${fmtDate(p.fecha)}</td>
+        <td style="font-weight:700;color:var(--verde,#27ae60)">${fmtSym(p.monto,f?.moneda)}</td>
+        <td>${esc(p.metodo||'—')}</td><td>${esc(p.referencia||'—')}</td><td>${esc(p.notas||'—')}</td>
+      </tr>`).join('')||'<tr><td colspan="5" style="color:#aaa;text-align:center;padding:12px">Sin pagos registrados</td></tr>'}
+      </tbody>
+    </table></div>
+    <div style="margin-top:12px;padding:12px;background:${saldo>0?'#fdecea':'#e8f7ef'};border-radius:8px;font-weight:700;text-align:right;font-size:1rem">
+      Saldo pendiente: <span style="font-size:1.2rem;color:${saldo>0?'var(--rojo,#e74c3c)':'var(--verde,#27ae60)'}">${fmtSym(saldo,f?.moneda)}</span>
+    </div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cerrar</button>
+   <button class="btn btn-success" onclick="closeModal();facPago()">💰 Registrar Pago</button>
+   <button class="btn btn-dark" onclick="closeModal();facPDF()">📄 PDF</button>`);
+}
+
+function facEstatus(){
+  if(!_facSel){toast('Selecciona una factura','err');return;}
+  openModal('Cambiar Estatus Factura',`
+    <p style="margin-bottom:12px;color:#666">Actual: ${badge(_facData?.estatus||'pendiente')}</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      ${['pendiente','parcial','pagada','vencida'].map(s=>`<button class="btn btn-secondary" onclick="facSetEst('${s}')">${badge(s)}</button>`).join('')}
+    </div>`);
+}
+async function facSetEst(est){
+  try{await api('/api/facturas/'+_facSel,'PUT',{estatus:est});toast('Estatus actualizado');closeModal();ordenes();}catch(e){toast(e.message,'err');}
+}
+
+function facPago(){
+  if(!_facSel){toast('Selecciona una factura','err');return;}
+  const saldo=parseFloat(_facData?.total||0)-parseFloat(_facData?.pagado||0);
+  openModal('💰 Registrar Pago',`
+    <p style="margin-bottom:12px;padding:10px;background:#f4f6fa;border-radius:6px">
+      <strong>Factura:</strong> ${esc(_facData?.numero_factura||'—')} &nbsp;|&nbsp;
+      <strong>Saldo:</strong> <span style="font-size:1.1rem;font-weight:700;color:var(--rojo,#e74c3c)">${fmtSym(saldo,_facData?.moneda)}</span>
+    </p>
+    <div class="form-grid form-grid-2">
+      <div class="field-group"><label class="field-required">Monto del Pago</label>
+        <input id="pago_m" type="text" inputmode="decimal" value="${saldo.toFixed(2)}" placeholder="0.00"></div>
+      <div class="field-group"><label>Método de Pago</label>
+        <select id="pago_met">
+          <option>Transferencia</option><option>Depósito</option><option>Cheque</option><option>Efectivo</option><option>Tarjeta</option>
+        </select></div>
+      <div class="field-group"><label>Referencia / Comprobante</label><input id="pago_ref" placeholder="Ej: SPEI-12345"></div>
+      <div class="field-group"><label>Fecha</label><input id="pago_f" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+      <div class="field-group" style="grid-column:1/-1"><label>Notas</label><textarea id="pago_n" rows="2"></textarea></div>
+    </div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+   <button class="btn btn-success" onclick="facPagoSave()">💰 Guardar Pago</button>`);
+}
+async function facPagoSave(){
+  const monto=toNum(ge('pago_m').value);
+  if(!monto||monto<=0){toast('Monto inválido','err');return;}
+  try{
+    const r=await api('/api/facturas/'+_facSel+'/pago','POST',{monto,metodo:ge('pago_met').value,referencia:ge('pago_ref').value.trim(),notas:ge('pago_n').value.trim(),fecha:ge('pago_f').value});
+    toast(`Pago registrado ✓ — Estatus: ${r.estatus}`);closeModal();ordenes();
+  }catch(e){toast(e.message,'err');}
+}
+
+async function facVerPagos(){
+  if(!_facSel){toast('Selecciona una factura','err');return;}
+  await facDetalle();
+}
+
+async function facPDF(){
+  if(!_facSel){toast('Selecciona una factura','err');return;}
+  window.open('/api/facturas/'+_facSel+'/pdf?token='+encodeURIComponent(localStorage.getItem('vef_token')||''),'_blank');
+}
+
+async function facEliminar(){
+  if(!_facSel){toast('Selecciona una factura','err');return;}
+  if(!confirm(`¿Eliminar factura ${_facData?.numero_factura}?`))return;
+  try{await api('/api/facturas/'+_facSel,'DELETE');toast('Factura eliminada');ordenes();}catch(e){toast(e.message,'err');}
+}
+
+/* ══════════════════════════════════════════════════════
+   OC PROVEEDORES — con barra completa de botones
+══════════════════════════════════════════════════════ */
+let _ocSel=null,_ocData=null;
+async function ocProv(){
+  setPage('OC Proveedores');
+  const [ocs,provs]=await Promise.all([
+    api('/api/ordenes-proveedor').catch(()=>[]),
+    api('/api/proveedores').catch(()=>[])
+  ]);
+  window._ocProvs=provs||[];
+  _ocSel=null;_ocData=null;
+  setContent(`
+  <div class="card">
+    <div class="card-header"><div class="card-title">📦 Órdenes de Compra a Proveedores</div></div>
+    <div class="card-body">
+      <div class="btn-toolbar">
+        <button class="btn btn-primary"   onclick="ocForm()">➕ Nueva OC</button>
+        <button class="btn btn-secondary" onclick="ocModificar()">✏️ Modificar</button>
+        <button class="btn btn-secondary" onclick="ocDetalle()">🔍 Ver Detalle</button>
+        <button class="btn btn-secondary" onclick="ocEstatus()">🔄 Cambiar Estatus</button>
+        <button class="btn btn-secondary" onclick="ocSeguimiento()">📌 Seguimiento</button>
+        <button class="btn btn-dark"      onclick="ocPDF()">📄 Generar PDF</button>
+        <button class="btn btn-secondary" onclick="ocEmail()">✉️ Enviar Correo</button>
+        <button class="btn btn-danger btn-sm" onclick="ocEliminar()">🗑 Eliminar</button>
+      </div>
+      <div id="ocResumen" style="margin-top:10px"></div>
+      <div class="search-bar" style="margin-top:8px">
+        <input class="search-input" placeholder="Buscar número, proveedor..." oninput="filterTable(this,'tblOCP')">
+        <select class="search-input" style="max-width:160px" onchange="filterByStatus(this,'tblOCP',4)">
+          <option value="">Todos</option><option>borrador</option><option>enviada</option><option>confirmada</option><option>recibida</option><option>cancelada</option>
+        </select>
+      </div>
+      <div class="table-wrap"><table id="tblOCP">
+        <thead><tr><th>Número</th><th>Proveedor</th><th>Total</th><th>Fecha Entrega</th><th>Estatus</th><th>Fecha</th></tr></thead>
+        <tbody>${(ocs||[]).map(o=>`<tr class="row-sel" onclick="selOC(${o.id},this)" data-id="${o.id}" data-row='${JSON.stringify(o).replace(/'/g,"&#39;")}'>
+          <td><strong>${esc(o.numero_op||o.numero_oc||'—')}</strong></td>
+          <td>${esc(o.proveedor_nombre||'—')}</td>
+          <td>${fmtSym(o.total,o.moneda)}</td>
+          <td>${fmtDate(o.fecha_entrega)||'—'}</td>
+          <td>${badge(o.estatus)}</td>
+          <td>${fmtDate(o.fecha_emision||o.created_at)}</td>
+        </tr>`).join('')||'<tr><td colspan="6" style="color:#aaa;text-align:center;padding:30px">Sin órdenes registradas</td></tr>'}
+        </tbody></table></div>
+    </div>
+  </div>`);
+}
+function selOC(id,row){
+  _ocSel=id;_ocData=JSON.parse(row.dataset.row||'{}');
+  document.querySelectorAll('#tblOCP tr.row-sel').forEach(r=>r.classList.remove('selected'));
+  row.classList.add('selected');
+  const r=document.getElementById('ocResumen');
+  if(r) r.innerHTML=`<div class="alert alert-info" style="margin:0">📦 <strong>${esc(_ocData.numero_op||_ocData.numero_oc||'—')}</strong> — ${esc(_ocData.proveedor_nombre||'—')} — ${fmtSym(_ocData.total,_ocData.moneda)} — ${badge(_ocData.estatus)}</div>`;
+}
+function ocForm(){
+  window._items=[];
+  const opts=(window._ocProvs||[]).map(p=>`<option value="${p.id}">${esc(p.nombre)}</option>`).join('');
+  openModalLg('Nueva Orden de Compra a Proveedor',`
+    <div class="form-grid form-grid-2" style="gap:12px">
+      <div class="field-group" style="grid-column:1/-1"><label class="field-required">Proveedor</label>
+        <select id="op_pr"><option value="">-- Seleccionar --</option>${opts}</select></div>
+      <div class="field-group"><label>Fecha de Entrega</label><input id="op_fe" type="date"></div>
+      <div class="field-group"><label>Lugar de Entrega</label><input id="op_lu"></div>
+      <div class="field-group"><label>Condiciones de Pago</label><input id="op_co"></div>
+      <div class="field-group"><label>Moneda</label>
+        <select id="op_mo"><option value="USD">USD</option><option value="MXN">MXN</option></select></div>
+      <div class="field-group" style="grid-column:1/-1"><label>Notas / Instrucciones</label><textarea id="op_no" rows="2"></textarea></div>
+    </div>
+    <div style="margin-top:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <strong style="color:var(--azul)">📋 Partidas / Materiales</strong>
+        <button class="btn btn-primary btn-sm" onclick="addItem()">➕ Agregar</button>
+      </div>
+      <div class="table-wrap"><table class="items-tbl" id="itemsTbl">
+        <thead><tr><th>Descripción</th><th style="width:80px">Cant.</th><th style="width:130px">P.U.</th><th style="width:130px">Total</th><th style="width:36px"></th></tr></thead>
+        <tbody id="itemsBody"></tbody>
+      </table></div>
+      <div class="total-box"><span class="label">TOTAL</span><span class="amount" id="totalAmt">$0.00</span></div>
+    </div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+   <button class="btn btn-primary" onclick="ocSave()">💾 Guardar OC</button>`);
+  renderItems();
+}
+async function ocModificar(){
+  if(!_ocSel){toast('Selecciona una OC primero','err');return;}
+  const oc=await api('/api/ordenes-proveedor/'+_ocSel).catch(()=>null);
+  if(!oc){toast('No se pudo cargar','err');return;}
+  window._items=(oc.items||[]).map(it=>({d:it.descripcion||'',q:it.cantidad||1,p:it.precio_unitario||0,t:it.total||0}));
+  const opts=(window._ocProvs||[]).map(p=>`<option value="${p.id}" ${oc.proveedor_id==p.id?'selected':''}>${esc(p.nombre)}</option>`).join('');
+  openModalLg(`Modificar OC: ${esc(oc.numero_op||oc.numero_oc||'—')}`,`
+    <div class="form-grid form-grid-2" style="gap:12px">
+      <div class="field-group" style="grid-column:1/-1"><label class="field-required">Proveedor</label>
+        <select id="op_pr"><option value="">-- Seleccionar --</option>${opts}</select></div>
+      <div class="field-group"><label>Fecha de Entrega</label><input id="op_fe" type="date" value="${(oc.fecha_entrega||'').slice(0,10)}"></div>
+      <div class="field-group"><label>Lugar de Entrega</label><input id="op_lu" value="${esc(oc.lugar_entrega||'')}"></div>
+      <div class="field-group"><label>Condiciones de Pago</label><input id="op_co" value="${esc(oc.condiciones_pago||'')}"></div>
+      <div class="field-group"><label>Moneda</label>
+        <select id="op_mo"><option value="USD" ${(oc.moneda||'USD')==='USD'?'selected':''}>USD</option><option value="MXN" ${oc.moneda==='MXN'?'selected':''}>MXN</option></select></div>
+      <div class="field-group" style="grid-column:1/-1"><label>Estatus</label>
+        <select id="op_est">
+          ${['borrador','enviada','confirmada','en proceso','recibida','cancelada'].map(s=>`<option ${oc.estatus===s?'selected':''}>${s}</option>`).join('')}
+        </select></div>
+      <div class="field-group" style="grid-column:1/-1"><label>Notas</label><textarea id="op_no" rows="2">${esc(oc.notas||'')}</textarea></div>
+    </div>
+    <div style="margin-top:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <strong style="color:var(--azul)">📋 Partidas</strong>
+        <button class="btn btn-primary btn-sm" onclick="addItem()">➕ Agregar</button>
+      </div>
+      <div class="table-wrap"><table class="items-tbl" id="itemsTbl">
+        <thead><tr><th>Descripción</th><th style="width:80px">Cant.</th><th style="width:130px">P.U.</th><th style="width:130px">Total</th><th style="width:36px"></th></tr></thead>
+        <tbody id="itemsBody"></tbody>
+      </table></div>
+      <div class="total-box"><span class="label">TOTAL</span><span class="amount" id="totalAmt">$0.00</span></div>
+    </div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+   <button class="btn btn-primary" onclick="ocModificarSave(${oc.id})">💾 Guardar Cambios</button>`);
+  renderItems();
+}
+async function ocModificarSave(id){
+  const prov=ge('op_pr').value;if(!prov){toast('Selecciona un proveedor','err');return;}
+  const items=window._items.map(it=>({descripcion:it.d,cantidad:toNum(it.q)||1,precio_unitario:toNum(it.p)||0}));
+  const total=items.reduce((s,it)=>s+it.cantidad*it.precio_unitario,0);
+  const body={proveedor_id:parseInt(prov),moneda:ge('op_mo').value,fecha_entrega:ge('op_fe').value||null,
+    lugar_entrega:ge('op_lu').value.trim(),condiciones_pago:ge('op_co').value.trim(),
+    notas:ge('op_no').value.trim(),estatus:ge('op_est').value,total,items};
+  try{await api('/api/ordenes-proveedor/'+id,'PUT',body);toast('OC actualizada ✓');closeModal();ocProv();}catch(e){toast(e.message,'err');}
+}
+async function ocEliminar(){
+  if(!_ocSel){toast('Selecciona una OC primero','err');return;}
+  const num=_ocData?.numero_op||_ocData?.numero_oc||_ocSel;
+  if(!confirm(`¿Eliminar OC ${num}? Esta acción no se puede deshacer.`))return;
+  try{
+    await api('/api/ordenes-proveedor/'+_ocSel,'DELETE');
+    toast('OC eliminada');ocProv();
+  }catch(e){toast(e.message,'err');}
+}
+async function ocSave(){
+  const prov=ge('op_pr').value;if(!prov){toast('Selecciona un proveedor','err');return;}
+  const body={proveedor_id:parseInt(prov),moneda:ge('op_mo').value,fecha_entrega:ge('op_fe').value||null,lugar_entrega:ge('op_lu').value.trim(),condiciones_pago:ge('op_co').value.trim(),notas:ge('op_no').value.trim(),items:window._items.map(it=>({descripcion:it.d,cantidad:parseFloat(it.q)||1,precio_unitario:parseFloat(it.p)||0}))};
+  try{await api('/api/ordenes-proveedor','POST',body);toast('OC creada ✓');closeModal();ocProv();}catch(e){toast(e.message,'err');}
+}
+async function ocDetalle(){
+  if(!_ocSel){toast('Selecciona una OC','err');return;}
+  const oc=await api('/api/ordenes-proveedor/'+_ocSel).catch(()=>null);
+  if(!oc){toast('No se pudo cargar','err');return;}
+  const rows=(oc.items||[]).map(it=>`<tr><td>${esc(it.descripcion||'—')}</td><td style="text-align:center">${it.cantidad}</td><td style="text-align:right">${fmtSym(it.precio_unitario,oc.moneda)}</td><td style="text-align:right;font-weight:700">${fmtSym(it.total,oc.moneda)}</td></tr>`).join('')||'<tr><td colspan="4" style="color:#aaa;text-align:center">Sin items</td></tr>';
+  const segs=(oc.seguimientos||[]).map(s=>`<li><strong>${fmtDate(s.fecha)}</strong> [${esc(s.tipo||'nota')}] ${esc(s.notas||'')}${s.proxima_accion?` ➜ <em>${esc(s.proxima_accion)}</em>`:''}</li>`).join('')||'<li style="color:#aaa">Sin seguimientos</li>';
+  openModalLg(`Detalle OC: ${esc(oc.numero_op||oc.numero_oc||'—')}`,`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;font-size:.9rem">
+      <div><strong>Proveedor:</strong> ${esc(oc.proveedor_nombre||'—')}</div>
+      <div><strong>RFC:</strong> ${esc(oc.proveedor_rfc||'—')}</div>
+      <div><strong>Total:</strong> <span style="font-size:1.15rem;font-weight:700;color:var(--azul)">${fmtSym(oc.total,oc.moneda)} ${oc.moneda||'USD'}</span></div>
+      <div><strong>Estatus:</strong> ${badge(oc.estatus)}</div>
+      <div><strong>Entrega:</strong> ${fmtDate(oc.fecha_entrega)||'—'}</div>
+      <div><strong>Lugar:</strong> ${esc(oc.lugar_entrega||'—')}</div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>Descripción</th><th>Cant.</th><th>P.U.</th><th>Total</th></tr></thead><tbody>${rows}</tbody>
+      <tfoot><tr><td colspan="3" style="text-align:right;font-weight:700;padding:8px">TOTAL ${oc.moneda||'USD'}</td><td style="text-align:right;font-weight:700;font-size:1.1rem;padding:8px">${fmtSym(oc.total,oc.moneda)}</td></tr></tfoot>
+    </table></div>
+    <div style="margin-top:14px"><strong>Seguimientos:</strong><ul style="margin-top:6px;padding-left:18px;font-size:.85rem">${segs}</ul></div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cerrar</button>
+   <button class="btn btn-dark" onclick="closeModal();ocPDF()">📄 Generar PDF</button>`);
+}
+function ocEstatus(){
+  if(!_ocSel){toast('Selecciona una OC','err');return;}
+  openModal('Cambiar Estatus OC',`
+    <p style="margin-bottom:12px;color:#666">Actual: ${badge(_ocData?.estatus||'borrador')}</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      ${['borrador','enviada','confirmada','en proceso','recibida','cancelada'].map(s=>`<button class="btn btn-secondary" onclick="ocSetEst('${s}')">${badge(s)}</button>`).join('')}
+    </div>`);
+}
+async function ocSetEst(est){
+  try{await api('/api/ordenes-proveedor/'+_ocSel,'PUT',{estatus:est});toast('Estatus actualizado');closeModal();ocProv();}catch(e){toast(e.message,'err');}
+}
+function ocSeguimiento(){
+  if(!_ocSel){toast('Selecciona una OC','err');return;}
+  openModal('Agregar Seguimiento OC',`
+    <div class="form-grid">
+      <div class="field-group"><label>Tipo</label>
+        <select id="ost"><option>llamada</option><option>correo</option><option>visita</option><option>nota</option><option>entrega parcial</option></select></div>
+      <div class="field-group"><label class="field-required">Notas</label><textarea id="osn" rows="3"></textarea></div>
+      <div class="field-group"><label>Próxima Acción</label><input id="osp"></div>
+    </div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+   <button class="btn btn-primary" onclick="ocSegGuardar()">💾 Guardar</button>`);
+}
+async function ocSegGuardar(){
+  const b={tipo:ge('ost').value,notas:ge('osn').value.trim(),proxima_accion:ge('osp').value.trim()};
+  if(!b.notas){toast('Notas requeridas','err');return;}
+  try{await api('/api/ordenes-proveedor/'+_ocSel+'/seguimiento','POST',b);toast('Seguimiento guardado ✓');closeModal();}catch(e){toast(e.message,'err');}
+}
+async function ocPDF(){
+  if(!_ocSel){toast('Selecciona una OC','err');return;}
+  window.open('/api/ordenes-proveedor/'+_ocSel+'/pdf?token='+encodeURIComponent(localStorage.getItem('vef_token')||''),'_blank');
+}
+function ocEmail(){
+  if(!_ocSel){toast('Selecciona una OC','err');return;}
+  openModal('Enviar OC por Correo',`
+    <div class="form-grid">
+      <div class="field-group"><label class="field-required">Para (To)</label><input id="oe_t" type="email" value="${esc(_ocData?.proveedor_email||'')}"></div>
+      <div class="field-group"><label>CC</label><input id="oe_c" type="email"></div>
+      <div class="field-group" style="grid-column:1/-1"><label>Mensaje</label><textarea id="oe_m" rows="3">Estimado proveedor, adjuntamos la orden de compra correspondiente.</textarea></div>
+    </div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+   <button class="btn btn-primary" onclick="ocEmailSend()">✉️ Enviar</button>`);
+}
+async function ocEmailSend(){
+  const to=ge('oe_t').value.trim();if(!to){toast('Destinatario requerido','err');return;}
+  try{await api('/api/ordenes-proveedor/'+_ocSel+'/email','POST',{to,cc:ge('oe_c').value.trim()||undefined,mensaje:ge('oe_m').value.trim()});toast('Correo enviado ✓');closeModal();}catch(e){toast(e.message,'err');}
+}
+
+/* ══════════════════════════════════════════════════════
+   INVENTARIO — con botones: Nueva, Modificar, Entrada, Salida, Ajuste, Historial, Eliminar
+══════════════════════════════════════════════════════ */
+let _invSel=null,_invData=null;
+async function inventario(){
+  setPage('Inventario');
+  const [data,provs]=await Promise.all([
+    api('/api/inventario').catch(()=>[]),
+    api('/api/proveedores').catch(()=>[])
+  ]);
+  window._invProvs=provs||[];
+  _invSel=null;_invData=null;
+  const ca=r=>parseFloat(r.qty_actual??r.cantidad_actual??r.stock_actual??0);
+  const cm=r=>parseFloat(r.qty_minima??r.cantidad_minima??r.stock_minimo??0);
+  const bajos=(data||[]).filter(p=>ca(p)<=cm(p));
+  setContent(`
+  ${bajos.length?`<div class="alert alert-warn">⚠ ${bajos.length} producto(s) con stock bajo: ${bajos.slice(0,5).map(p=>esc(p.nombre)).join(', ')}${bajos.length>5?'...':''}</div>`:''}
+  <div class="card">
+    <div class="card-header"><div class="card-title">🗃 Inventario</div></div>
+    <div class="card-body">
+      <div class="btn-toolbar">
+        <button class="btn btn-primary"   onclick="invForm()">➕ Nuevo Producto</button>
+        <button class="btn btn-secondary" onclick="invEdit()">✏️ Modificar</button>
+        <button class="btn btn-success"   onclick="invMov('entrada')">📥 Entrada</button>
+        <button class="btn btn-warning"   onclick="invMov('salida')">📤 Salida</button>
+        <button class="btn btn-secondary" onclick="invMov('ajuste')">🔧 Ajustar</button>
+        <button class="btn btn-secondary" onclick="invHistorial()">📋 Historial</button>
+        <button class="btn btn-danger btn-sm" onclick="invDel()">🗑 Eliminar</button>
+      </div>
+      <div id="invResumen" style="margin-top:10px"></div>
+      <div class="search-bar" style="margin-top:8px">
+        <input class="search-input" placeholder="Buscar producto, código, categoría..." oninput="filterTable(this,'tblInv')">
+      </div>
+      <div class="table-wrap"><table id="tblInv">
+        <thead><tr><th>Código</th><th>Nombre</th><th>Categoría</th><th>Unidad</th><th style="text-align:center">Stock</th><th style="text-align:center">Mín.</th><th>P.Costo</th><th>P.Venta</th><th>Ubicación</th></tr></thead>
+        <tbody>${(data||[]).map(p=>{
+          const stockA=ca(p),stockM=cm(p),bajo=stockA<=stockM;
+          return `<tr class="row-sel${bajo?' row-warn':''}" onclick="selInv(${p.id},this)" data-id="${p.id}" data-row='${JSON.stringify(p).replace(/'/g,"&#39;")}'>
+            <td>${esc(p.codigo||'—')}</td>
+            <td><strong>${esc(p.nombre)}</strong>${bajo?' <span style="color:var(--naranja,#e67e22);font-size:.8rem">⚠ bajo</span>':''}</td>
+            <td>${esc(p.categoria||'—')}</td>
+            <td>${esc(p.unidad||'pza')}</td>
+            <td style="text-align:center;font-weight:700;color:${bajo?'var(--rojo,#e74c3c)':'var(--verde,#27ae60)'}">${stockA}</td>
+            <td style="text-align:center">${stockM}</td>
+            <td>${fmt(p.precio_costo)}</td>
+            <td>${fmt(p.precio_venta)}</td>
+            <td>${esc(p.ubicacion||'—')}</td>
+          </tr>`;
+        }).join('')||'<tr><td colspan="9" style="color:#aaa;text-align:center;padding:30px">Sin productos en inventario</td></tr>'}
+        </tbody></table></div>
+    </div>
+  </div>`);
+}
+function selInv(id,row){
+  _invSel=id;_invData=JSON.parse(row.dataset.row||'{}');
+  document.querySelectorAll('#tblInv tr.row-sel').forEach(r=>r.classList.remove('selected'));
+  row.classList.add('selected');
+  const r=document.getElementById('invResumen');
+  const ca=parseFloat(_invData.qty_actual??_invData.cantidad_actual??_invData.stock_actual??0);
+  if(r) r.innerHTML=`<div class="alert alert-info" style="margin:0">🗃 <strong>${esc(_invData.nombre)}</strong> — Stock: <strong>${ca}</strong> ${esc(_invData.unidad||'pza')} — ${esc(_invData.categoria||'—')}</div>`;
+}
+function invForm(ed=null){
+  const pOpts=(window._invProvs||[]).map(p=>`<option value="${p.id}" ${ed?.proveedor_id==p.id?'selected':''}>${esc(p.nombre)}</option>`).join('');
+  const caVal=ed?(ed.cantidad_actual??ed.stock_actual??0):0;
+  const cmVal=ed?(ed.cantidad_minima??ed.stock_minimo??0):0;
+  openModalLg(ed?`Modificar: ${ed.nombre}`:'Nuevo Producto en Inventario',`
+    <div class="form-grid form-grid-2" style="gap:12px">
+      <div class="field-group"><label>Código / SKU</label><input id="iv_cod" value="${esc(ed?.codigo||'')}"></div>
+      <div class="field-group"><label class="field-required">Nombre del Producto</label><input id="iv_nom" value="${esc(ed?.nombre||'')}"></div>
+      <div class="field-group"><label>Categoría</label><input id="iv_cat" value="${esc(ed?.categoria||'')}"></div>
+      <div class="field-group"><label>Unidad de Medida</label><input id="iv_uni" value="${esc(ed?.unidad||'pza')}"></div>
+      <div class="field-group"><label>Stock Inicial</label><input id="iv_stk" type="number" step="0.01" value="${caVal}" ${ed?'disabled title="Usa Entrada/Salida para modificar stock"':''}></div>
+      <div class="field-group"><label>Stock Mínimo (alerta)</label><input id="iv_min" type="number" step="0.01" value="${cmVal}"></div>
+      <div class="field-group"><label>Precio Costo</label><input id="iv_pc" type="number" step="0.01" value="${ed?.precio_costo??0}"></div>
+      <div class="field-group"><label>Precio Venta</label><input id="iv_pv" type="number" step="0.01" value="${ed?.precio_venta??0}"></div>
+      <div class="field-group"><label>Ubicación / Almacén</label><input id="iv_ub" value="${esc(ed?.ubicacion||'')}"></div>
+      <div class="field-group"><label>Proveedor</label><select id="iv_pr"><option value="">-- Ninguno --</option>${pOpts}</select></div>
+      <div class="field-group" style="grid-column:1/-1"><label>Descripción / Notas</label><textarea id="iv_de" rows="2">${esc(ed?.descripcion||ed?.notas||'')}</textarea></div>
+    </div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+   <button class="btn btn-primary" onclick="invSave(${ed?.id||''})">💾 Guardar</button>`);
+}
+async function invEdit(){
+  if(!_invSel){toast('Selecciona un producto primero','err');return;}
+  invForm(_invData);
+}
+async function invSave(id=''){
+  const b={codigo:ge('iv_cod').value.trim(),nombre:ge('iv_nom').value.trim(),categoria:ge('iv_cat').value.trim(),unidad:ge('iv_uni').value.trim()||'pza',cantidad_actual:parseFloat(ge('iv_stk').value)||0,cantidad_minima:parseFloat(ge('iv_min').value)||0,precio_costo:parseFloat(ge('iv_pc').value)||0,precio_venta:parseFloat(ge('iv_pv').value)||0,ubicacion:ge('iv_ub').value.trim(),proveedor_id:parseInt(ge('iv_pr').value)||null,descripcion:ge('iv_de').value.trim()};
+  if(!b.nombre){toast('Nombre requerido','err');return;}
+  try{id?await api('/api/inventario/'+id,'PUT',b):await api('/api/inventario','POST',b);toast('Producto guardado ✓');closeModal();inventario();}catch(e){toast(e.message,'err');}
+}
+function invMov(tipo){
+  if(!_invSel){toast('Selecciona un producto primero','err');return;}
+  const tMap={entrada:'📥 Entrada de Stock',salida:'📤 Salida de Stock',ajuste:'🔧 Ajuste de Stock'};
+  const ca=parseFloat(_invData?.qty_actual??_invData?.cantidad_actual??_invData?.stock_actual??0);
+  openModal(tMap[tipo],`
+    <p style="margin-bottom:12px;padding:10px;background:#f4f6fa;border-radius:6px">
+      <strong>Producto:</strong> ${esc(_invData?.nombre||'—')}<br>
+      <strong>Stock actual:</strong> <span style="font-size:1.2rem;font-weight:700;color:var(--azul)">${ca} ${esc(_invData?.unidad||'pza')}</span>
+    </p>
+    <div class="form-grid">
+      <div class="field-group"><label class="field-required">${tipo==='ajuste'?'Nuevo Stock Total':'Cantidad a '+(tipo==='entrada'?'Ingresar':'Retirar')}</label>
+        <input id="mv_c" type="number" step="0.01" min="0.01" placeholder="${tipo==='ajuste'?'Ej: 50':'Ej: 10'}"></div>
+      <div class="field-group"><label>Referencia (OC / Factura / Doc)</label><input id="mv_r" placeholder="Ej: OC-2025-001"></div>
+      <div class="field-group" style="grid-column:1/-1"><label>Notas / Motivo</label><textarea id="mv_n" rows="2"></textarea></div>
+    </div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+   <button class="btn btn-primary" onclick="invMovGuardar('${tipo}')">💾 Registrar ${tipo.charAt(0).toUpperCase()+tipo.slice(1)}</button>`);
+}
+async function invMovGuardar(tipo){
+  const cant=parseFloat(ge('mv_c').value);
+  if(!cant||cant<=0){toast('Cantidad inválida','err');return;}
+  try{
+    const r=await api('/api/inventario/'+_invSel+'/movimiento','POST',{tipo,cantidad:cant,referencia:ge('mv_r').value.trim(),notas:ge('mv_n').value.trim()});
+    toast(`${tipo==='entrada'?'Entrada':'tipo'==='salida'?'Salida':'Ajuste'} registrado ✓  Nuevo stock: ${r.stock_nuevo}`);
+    closeModal();inventario();
+  }catch(e){toast(e.message,'err');}
+}
+async function invHistorial(){
+  const data=await api('/api/inventario/movimientos').catch(()=>[]);
+  openModalLg('📋 Historial de Movimientos de Inventario',`
+    <div class="search-bar"><input class="search-input" placeholder="Filtrar..." oninput="filterTable(this,'tblMov')"></div>
+    <div class="table-wrap"><table id="tblMov">
+      <thead><tr><th>Fecha</th><th>Producto</th><th>Tipo</th><th style="text-align:center">Cantidad</th><th style="text-align:center">Stock Ant.</th><th style="text-align:center">Stock Nuevo</th><th>Referencia</th><th>Notas</th></tr></thead>
+      <tbody>${(data||[]).map(m=>`<tr>
+        <td>${fmtDate(m.fecha)}</td>
+        <td>${esc(m.producto_nombre||'—')}</td>
+        <td>${badge(m.tipo)}</td>
+        <td style="text-align:center;font-weight:700">${m.cantidad}</td>
+        <td style="text-align:center;color:#999">${m.stock_anterior??'—'}</td>
+        <td style="text-align:center;font-weight:700;color:var(--azul)">${m.stock_nuevo??'—'}</td>
+        <td>${esc(m.referencia||'—')}</td>
+        <td>${esc(m.notas||'—')}</td>
+      </tr>`).join('')||'<tr><td colspan="8" style="color:#aaa;text-align:center;padding:20px">Sin movimientos registrados</td></tr>'}
+      </tbody></table></div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cerrar</button>`);
+}
+async function invDel(){
+  if(!_invSel){toast('Selecciona un producto primero','err');return;}
+  if(!confirm(`¿Eliminar "${_invData?.nombre}" del inventario?`))return;
+  try{await api('/api/inventario/'+_invSel,'DELETE');toast('Producto eliminado');inventario();}catch(e){toast(e.message,'err');}
+}
+
+/* ══════════════════════════════════════════════════════
+   ITEMS helper compartido (cotizaciones + OC)
+══════════════════════════════════════════════════════ */
+function toNum(v){ return parseFloat(String(v).replace(',','.'))||0; }
+
+// renderItems — dibuja la tabla completa (solo al abrir modal o agregar/quitar fila)
+function renderItems(){
+  const body=document.getElementById('itemsBody'); if(!body)return;
+  const mon=document.querySelector('[name=cq_m]:checked')?.value||ge('op_mo')?.value||'USD';
+  body.innerHTML=window._items.map((it,i)=>`<tr data-i="${i}">
+    <td style="min-width:200px">
+      <div style="display:flex;gap:4px;align-items:center">
+        <input class="ii-d" data-i="${i}" value="${esc(it.d)}" placeholder="Descripción del item" style="flex:1;min-width:0">
+        <button class="btn btn-secondary btn-xs" onclick="abrirSelectorInv(${i})" title="Seleccionar del inventario" style="white-space:nowrap;padding:4px 6px">📦</button>
+      </div>
+    </td>
+    <td style="min-width:80px"><input class="ii-q" data-i="${i}" type="text" inputmode="decimal" value="${it.q}" style="text-align:center;width:100%" placeholder="1"></td>
+    <td style="min-width:120px"><input class="ii-p" data-i="${i}" type="text" inputmode="decimal" value="${it.p}" style="text-align:right;width:100%" placeholder="0.00"></td>
+    <td class="ii-t" data-i="${i}" style="text-align:right;padding:8px 10px;font-weight:600;min-width:110px;white-space:nowrap">${fmtSym(it.t,mon)}</td>
+    <td><button class="btn btn-danger btn-xs" onclick="remItem(${i})">✕</button></td>
+  </tr>`).join('');
+  recalcTotal();
+}
+
+async function abrirSelectorInv(itemIdx){
+  window._selectorIdx = itemIdx;
+  if(!window._invCache || window._invCache.length===0){
+    window._invCache = await api('/api/inventario').catch(()=>[]);
+  }
+  const inv = window._invCache||[];
+  window._invRows = {};
+  const rows = inv.map((p,ri)=>{
+    const stock=parseFloat(p.qty_actual??p.cantidad_actual??p.stock_actual??0);
+    const precio=parseFloat(p.precio_venta||0);
+    window._invRows[ri]={nombre:p.nombre||'', precio};
+    return `<tr data-ri="${ri}" style="cursor:pointer;transition:background .15s" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background=''">
+      <td><strong>${esc(p.nombre)}</strong><br><small style="color:#888">${esc(p.codigo||'—')}</small></td>
+      <td>${esc(p.categoria||'—')}</td>
+      <td style="text-align:center;font-weight:700;color:${stock<=0?'var(--rojo,#e74c3c)':'var(--verde,#27ae60)'}">${stock} ${esc(p.unidad||'pza')}</td>
+      <td style="text-align:right;font-weight:600">${fmtSym(precio,'USD')}</td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="4" style="color:#aaa;text-align:center;padding:20px">Sin productos en inventario</td></tr>';
+
+  // Usar overlay dedicado — no toca el modal principal del formulario
+  document.getElementById('invSelBody').innerHTML = rows;
+  document.getElementById('invSelOverlay').style.display = 'flex';
+  setTimeout(()=>{ const s=document.getElementById('invSelSearch'); if(s){s.value='';s.focus();} },80);
+}
+
+// Listener único en el tbody del selector — se registra una sola vez al cargar la página
+document.addEventListener('DOMContentLoaded', ()=>{
+  const tbody = document.getElementById('invSelBody');
+  if(tbody) tbody.addEventListener('click', e=>{
+    const tr = e.target.closest('tr[data-ri]');
+    if(!tr) return;
+    const ri = parseInt(tr.dataset.ri);
+    const prod = window._invRows?.[ri];
+    if(!prod) return;
+    const i = window._selectorIdx;
+    if(window._items?.[i] !== undefined){
+      window._items[i].d = prod.nombre;
+      window._items[i].p = prod.precio;
+      window._items[i].t = toNum(window._items[i].q||1) * prod.precio;
+    }
+    closeInvSel();
+    renderItems();
+    setTimeout(()=>{
+      const inp = document.querySelector(`.ii-d[data-i="${i}"]`);
+      if(inp){ inp.style.background='#d4edda'; setTimeout(()=>inp.style.background='',1500); }
+    },100);
+  });
+});
+
+// recalcTotal — actualiza solo totales sin redibujar inputs (no pierde el foco)
+function recalcTotal(){
+  const mon=document.querySelector('[name=cq_m]:checked')?.value||ge('op_mo')?.value||'USD';
+  let grand=0;
+  window._items.forEach((it,i)=>{
+    const td=document.querySelector(`.ii-t[data-i="${i}"]`);
+    if(td) td.textContent=fmtSym(it.t,mon);
+    grand+=parseFloat(it.t)||0;
+  });
+  const el=document.getElementById('totalAmt');
+  if(el) el.textContent=fmtSym(grand,mon)+' '+mon;
+}
+
+// Escucha cambios en la tabla SIN redibujar (preserva foco)
+document.addEventListener('input', e=>{
+  const el=e.target;
+  const i=parseInt(el.dataset.i);
+  if(isNaN(i)||!window._items[i]) return;
+  if(el.classList.contains('ii-d')){ window._items[i].d=el.value; }
+  else if(el.classList.contains('ii-q')){ window._items[i].q=el.value; window._items[i].t=toNum(el.value)*toNum(window._items[i].p); recalcTotal(); }
+  else if(el.classList.contains('ii-p')){ window._items[i].p=el.value; window._items[i].t=toNum(window._items[i].q)*toNum(el.value); recalcTotal(); }
+});
+
+function addItem(){ window._items.push({d:'',q:1,p:0,t:0}); renderItems(); }
+function remItem(i){ window._items.splice(i,1); renderItems(); }
+
+document.addEventListener('change',e=>{ if(e.target.name==='cq_m'||e.target.id==='op_mo') recalcTotal(); });
+
+/* shorthand helpers */
+function ge(id){ return document.getElementById(id); }
+
+/* ══════════════ USUARIOS ══════════════ */
+async function usuarios(){
+  setPage('Usuarios');
+  if(USER.rol!=='admin'){ setContent('<div class="alert alert-err">⛔ Sin permisos de administrador</div>'); return; }
+  const data=await api('/api/usuarios').catch(()=>[]);
+  setContent(`
+  <div class="card">
+    <div class="card-header"><div class="card-title">👥 Usuarios del Sistema</div>
+      <button class="btn btn-primary" onclick="usrForm()">➕ Nuevo Usuario</button></div>
+    <div class="card-body">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Username</th><th>Nombre</th><th>Email</th><th>Rol</th><th>Activo</th><th>Último Acceso</th><th>Acciones</th></tr></thead>
+        <tbody>${(data||[]).map(u=>`<tr>
+          <td><strong>${esc(u.username)}</strong></td><td>${esc(u.nombre||'—')}</td>
+          <td>${esc(u.email||'—')}</td><td>${badge(u.rol)}</td>
+          <td>${u.activo!==false?'<span style="color:var(--verde,#27ae60)">✓</span>':'<span style="color:var(--rojo,#e74c3c)">✗</span>'}</td>
+          <td style="font-size:.8rem">${u.ultimo_acceso?new Date(u.ultimo_acceso).toLocaleString('es-MX'):'Nunca'}</td>
+          <td class="btn-group">
+            <button class="btn btn-secondary btn-xs" onclick="usrEdit(${JSON.stringify(u).replace(/"/g,'&quot;')})">✏️</button>
+            <button class="btn btn-secondary btn-xs" onclick="usrReset(${u.id},'${esc(u.username)}')">🔑</button>
+          </td>
+        </tr>`).join('')}
+        </tbody></table></div>
+    </div>
+  </div>`);
+}
+function usrForm(){
+  openModal('Nuevo Usuario',`
+    <div class="form-grid form-grid-2">
+      <div class="field-group"><label class="field-required">Username</label><input id="uu"></div>
+      <div class="field-group"><label class="field-required">Contraseña</label><input id="up" type="password"></div>
+      <div class="field-group"><label>Nombre</label><input id="un"></div>
+      <div class="field-group"><label>Email</label><input id="ue" type="email"></div>
+      <div class="field-group"><label>Rol</label><select id="ur">
+        <option value="usuario">Usuario</option><option value="ventas">Ventas</option>
+        <option value="compras">Compras</option><option value="almacen">Almacén</option><option value="admin">Admin</option>
+      </select></div>
+    </div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+   <button class="btn btn-primary" onclick="usrSave()">💾 Crear</button>`);
+}
+function usrEdit(u){
+  openModal('Editar: '+u.username,`
+    <div class="form-grid form-grid-2">
+      <div class="field-group"><label>Nombre</label><input id="uNom" value="${esc(u.nombre||'')}"></div>
+      <div class="field-group"><label>Email</label><input id="uEm" type="email" value="${esc(u.email||'')}"></div>
+      <div class="field-group"><label>Rol</label><select id="uRol">
+        ${['usuario','ventas','compras','almacen','admin'].map(r=>`<option ${u.rol===r?'selected':''}>${r}</option>`).join('')}
+      </select></div>
+      <div class="field-group"><label>Activo</label><select id="uAct">
+        <option value="true" ${u.activo!==false?'selected':''}>Sí</option>
+        <option value="false" ${u.activo===false?'selected':''}>No</option>
+      </select></div>
+    </div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+   <button class="btn btn-primary" onclick="usrEditSave(${u.id})">💾 Guardar</button>`);
+}
+async function usrEditSave(id){
+  const b={nombre:ge('uNom').value.trim(),email:ge('uEm').value.trim(),rol:ge('uRol').value,activo:ge('uAct').value==='true'};
+  try{await api('/api/usuarios/'+id,'PUT',b);toast('Usuario actualizado');closeModal();usuarios();}catch(e){toast(e.message,'err');}
+}
+function usrReset(id,user){
+  openModal('Cambiar Contraseña: '+user,`
+    <div class="field-group"><label class="field-required">Nueva Contraseña</label><input id="urp" type="password"></div>`,
+  `<button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+   <button class="btn btn-primary" onclick="usrResetSave(${id})">🔑 Cambiar</button>`);
+}
+async function usrResetSave(id){
+  const p=ge('urp').value;if(!p){toast('Contraseña requerida','err');return;}
+  try{await api('/api/usuarios/'+id+'/reset-password','POST',{password:p});toast('Contraseña cambiada ✓');closeModal();}catch(e){toast(e.message,'err');}
+}
+async function usrSave(){
+  const b={username:ge('uu').value.trim(),password:ge('up').value,nombre:ge('un').value.trim(),email:ge('ue').value.trim(),rol:ge('ur').value};
+  if(!b.username||!b.password){toast('Username y contraseña requeridos','err');return;}
+  try{await api('/api/usuarios','POST',b);toast('Usuario creado ✓');closeModal();usuarios();}catch(e){toast(e.message,'err');}
+}
+
+
+/* ══════════════════════════════════════════════════════
+   CONFIGURACIÓN — Logo + Prueba de Correo
+══════════════════════════════════════════════════════ */
+async function configuracion(){
+  setPage('Configuración');
+  const logo = await api('/api/logo/status').catch(()=>({found:false}));
+  setContent(`
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+    <!-- LOGO -->
+    <div class="card">
+      <div class="card-header"><div class="card-title">🖼️ Logo de la Empresa</div></div>
+      <div class="card-body">
+        <div id="logoPreview" style="margin-bottom:16px;min-height:80px;display:flex;align-items:center;justify-content:center;background:#f4f6fa;border-radius:8px;border:2px dashed #ccc;padding:16px">
+          ${logo.found
+            ? `<img src="/logo.png?t=${Date.now()}" style="max-height:80px;max-width:200px" onerror="this.src='';this.parentElement.innerHTML='<span style=color:#aaa>Error al cargar logo</span>'">`
+            : '<span style="color:#aaa;font-size:.9rem">⚠️ Sin logo — Los PDFs usarán encabezado azul sin imagen</span>'}
+        </div>
+        <p style="font-size:.82rem;color:#666;margin-bottom:12px">
+          El logo aparece en el encabezado y como marca de agua en los PDFs.<br>
+          Formatos: <strong>PNG o JPG</strong> · Recomendado: fondo transparente, 400×200px
+        </p>
+        <div class="field-group">
+          <label>Seleccionar archivo de logo</label>
+          <input type="file" id="logoFile" accept=".png,.jpg,.jpeg" style="margin-bottom:10px">
+        </div>
+        <button class="btn btn-primary" onclick="logoUpload()">📤 Subir Logo</button>
+        <div id="logoMsg" style="margin-top:10px;font-size:.85rem"></div>
+        <p style="margin-top:14px;font-size:.78rem;color:#999">
+          💡 Alternativa: copia <code>logo.png</code> directamente a la carpeta <code>D:\VEF\VEF3\VEF_ERP\</code> y reinicia el servidor.
+        </p>
+      </div>
+    </div>
+
+    <!-- CORREO -->
+    <div class="card">
+      <div class="card-header"><div class="card-title">✉️ Configuración de Correo</div></div>
+      <div class="card-body">
+        <div style="background:#f4f6fa;border-radius:8px;padding:14px;font-size:.85rem;margin-bottom:16px">
+          <div style="margin-bottom:6px"><strong>Servidor:</strong> smtp.zoho.com · Puerto 465 (SSL)</div>
+          <div style="margin-bottom:6px"><strong>Cuenta:</strong> soporte.ventas@vef-automatizacion.com</div>
+          <div><strong>Estado:</strong> <span id="smtpStatus">Sin verificar</span></div>
+        </div>
+        <div class="field-group">
+          <label>Enviar correo de prueba a</label>
+          <input id="testEmail" type="email" placeholder="tu@correo.com" value="soporte.ventas@vef-automatizacion.com">
+        </div>
+        <button class="btn btn-primary" onclick="testCorreo()">📧 Enviar Correo de Prueba</button>
+        <div id="emailMsg" style="margin-top:10px;font-size:.85rem"></div>
+      </div>
+    </div>
+
+    <!-- INFO SISTEMA -->
+    <div class="card" style="grid-column:1/-1">
+      <div class="card-header"><div class="card-title">ℹ️ Información del Sistema</div></div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;font-size:.85rem">
+          <div><strong>Sistema:</strong> VEF ERP Industrial</div>
+          <div><strong>Empresa:</strong> VEF Automatización</div>
+          <div><strong>Teléfono:</strong> +52 (722) 115-7792</div>
+          <div><strong>Base de datos:</strong> PostgreSQL (AWS RDS)</div>
+          <div><strong>Email:</strong> soporte.ventas@vef-automatizacion.com</div>
+          <div><strong>Usuario actual:</strong> ${USER?.nombre||USER?.username||'—'} (${USER?.rol||'—'})</div>
+        </div>
+        <div style="margin-top:14px">
+          <button class="btn btn-secondary" onclick="checkDB()">🔍 Verificar Conexión DB</button>
+          <span id="dbMsg" style="margin-left:12px;font-size:.85rem"></span>
+        </div>
+      </div>
+    </div>
+
+  </div>`);
+}
+
+async function logoUpload(){
+  const file = document.getElementById('logoFile')?.files?.[0];
+  if(!file){ toast('Selecciona un archivo primero','err'); return; }
+  if(!file.type.match(/image\/(png|jpeg)/)){toast('Solo PNG o JPG','err');return;}
+  if(file.size > 2*1024*1024){toast('Archivo muy grande (máx 2MB)','err');return;}
+  const msg = document.getElementById('logoMsg');
+  msg.innerHTML = '⏳ Subiendo...';
+  const reader = new FileReader();
+  reader.onload = async e => {
+    try{
+      const b64 = e.target.result.split(',')[1];
+      await api('/api/logo/upload','POST',{data:b64, mime:file.type, ext: file.name.split('.').pop().toLowerCase() });
+      msg.innerHTML = '<span style="color:var(--verde)">✅ Logo subido correctamente. Reinicia el servidor para verlo en PDFs.</span>';
+      toast('Logo guardado ✓');
+      setTimeout(()=>configuracion(), 1500);
+    }catch(err){ msg.innerHTML = '<span style="color:var(--rojo)">❌ '+esc(err.message)+'</span>'; }
+  };
+  reader.readAsDataURL(file);
+}
+
+async function testCorreo(){
+  const to = document.getElementById('testEmail')?.value?.trim();
+  if(!to){ toast('Ingresa un correo destino','err'); return; }
+  const msg = document.getElementById('emailMsg');
+  msg.innerHTML = '⏳ Enviando...';
+  try{
+    await api('/api/email/test','POST',{to});
+    msg.innerHTML = '<span style="color:var(--verde)">✅ Correo enviado a '+esc(to)+'</span>';
+    toast('Correo de prueba enviado ✓');
+  }catch(e){ msg.innerHTML = '<span style="color:var(--rojo)">❌ Error: '+esc(e.message)+'</span>'; }
+}
+
+async function checkDB(){
+  const el = document.getElementById('dbMsg');
+  el.textContent = '⏳ Verificando...';
+  try{
+    const r = await api('/api/health');
+    el.innerHTML = `<span style="color:var(--verde)">✅ Conectado · Latencia: ${r.latency_ms}ms · Tablas: ${r.total_tables} · Logo: ${r.logo}</span>`;
+  }catch(e){ el.innerHTML = '<span style="color:var(--rojo)">❌ '+esc(e.message)+'</span>'; }
+}
+
+/* ══════════════ INIT ══════════════ */
+// Modal solo se cierra con botón ✕ o botones explícitos — no al hacer click fuera
+dashboard();
+</script>
+</body>
+</html>
