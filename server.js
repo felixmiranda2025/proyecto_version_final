@@ -450,6 +450,16 @@ async function autoSetup() {
         fecha TIMESTAMP DEFAULT NOW(), tipo TEXT, cantidad NUMERIC(10,2),
         stock_anterior NUMERIC(10,2), stock_nuevo NUMERIC(10,2),
         referencia TEXT, notas TEXT, created_by INTEGER)`,
+      empresa_config:`CREATE TABLE IF NOT EXISTS empresa_config (
+        id SERIAL PRIMARY KEY,
+        nombre VARCHAR(200) NOT NULL DEFAULT 'VEF Automatización',
+        razon_social VARCHAR(200), rfc VARCHAR(30), regimen_fiscal VARCHAR(100),
+        contacto VARCHAR(100), telefono VARCHAR(50), email VARCHAR(100),
+        direccion TEXT, ciudad VARCHAR(100), estado VARCHAR(100), cp VARCHAR(10),
+        pais VARCHAR(50) DEFAULT 'México', sitio_web VARCHAR(150),
+        moneda_default VARCHAR(10) DEFAULT 'USD', iva_default NUMERIC(5,2) DEFAULT 16.00,
+        notas_factura TEXT, notas_cotizacion TEXT,
+        updated_at TIMESTAMP DEFAULT NOW())`,
     };
     for (const [name,sql] of Object.entries(TABLES)) {
       await pool.query(sql);
@@ -530,6 +540,20 @@ async function autoSetup() {
     await ALTER('ordenes_proveedor','moneda',"TEXT DEFAULT 'USD'");
     await ALTER('ordenes_proveedor','total','NUMERIC(15,2) DEFAULT 0');
     await ALTER('ordenes_proveedor','created_by','INTEGER');
+
+    // Insertar registro por defecto en empresa_config si está vacío
+    try {
+      const ec = await pool.query('SELECT id FROM empresa_config LIMIT 1');
+      if (ec.rows.length === 0) {
+        await pool.query(`INSERT INTO empresa_config
+          (nombre,razon_social,rfc,regimen_fiscal,telefono,email,direccion,ciudad,estado,cp,pais,moneda_default,iva_default)
+          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
+          ['VEF Automatización','VEF Automatización S.A. de C.V.','','',
+           '+52 (722) 115-7792','soporte.ventas@vef-automatizacion.com',
+           '','','Estado de México','','México','USD',16.00]);
+        console.log('  ✅ Empresa configurada por defecto');
+      }
+    } catch(e) { console.log('  ⚠ empresa_config init:', e.message); }
 
     // 4. Volver a leer esquema actualizado
     const {rows:rows2} = await pool.query(`
@@ -1454,6 +1478,48 @@ app.post('/api/logo/upload', auth, adminOnly, async (req,res)=>{
     console.log('🖼  Logo subido:', dest, buf.length, 'bytes');
     res.json({ ok: true, path: dest, size: buf.length });
   } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// ================================================================
+// EMPRESA CONFIG — GET y PUT (upsert)
+// ================================================================
+app.get('/api/empresa', auth, async (req,res)=>{
+  try {
+    const r = await pool.query('SELECT * FROM empresa_config ORDER BY id LIMIT 1');
+    res.json(r.rows[0] || {});
+  } catch(e){ res.status(500).json({error:e.message}); }
+});
+
+app.put('/api/empresa', auth, adminOnly, async (req,res)=>{
+  try {
+    const {nombre,razon_social,rfc,regimen_fiscal,contacto,telefono,email,
+           direccion,ciudad,estado,cp,pais,sitio_web,
+           moneda_default,iva_default,notas_factura,notas_cotizacion} = req.body;
+    // Verificar si ya existe
+    const ex = await pool.query('SELECT id FROM empresa_config LIMIT 1');
+    if (ex.rows.length > 0) {
+      await pool.query(`UPDATE empresa_config SET
+        nombre=$1, razon_social=$2, rfc=$3, regimen_fiscal=$4, contacto=$5,
+        telefono=$6, email=$7, direccion=$8, ciudad=$9, estado=$10, cp=$11,
+        pais=$12, sitio_web=$13, moneda_default=$14, iva_default=$15,
+        notas_factura=$16, notas_cotizacion=$17, updated_at=NOW()
+        WHERE id=$18`,
+        [nombre,razon_social,rfc,regimen_fiscal,contacto,telefono,email,
+         direccion,ciudad,estado,cp,pais||'México',sitio_web,
+         moneda_default||'USD',iva_default||16,notas_factura,notas_cotizacion,
+         ex.rows[0].id]);
+    } else {
+      await pool.query(`INSERT INTO empresa_config
+        (nombre,razon_social,rfc,regimen_fiscal,contacto,telefono,email,
+         direccion,ciudad,estado,cp,pais,sitio_web,moneda_default,iva_default,notas_factura,notas_cotizacion)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)`,
+        [nombre,razon_social,rfc,regimen_fiscal,contacto,telefono,email,
+         direccion,ciudad,estado,cp,pais||'México',sitio_web,
+         moneda_default||'USD',iva_default||16,notas_factura,notas_cotizacion]);
+    }
+    const updated = await pool.query('SELECT * FROM empresa_config ORDER BY id LIMIT 1');
+    res.json(updated.rows[0]);
+  } catch(e){ res.status(500).json({error:e.message}); }
 });
 
 // ================================================================

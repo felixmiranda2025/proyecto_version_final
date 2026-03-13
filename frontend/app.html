@@ -1655,9 +1655,96 @@ async function usrSave(){
 ══════════════════════════════════════════════════════ */
 async function configuracion(){
   setPage('Configuración');
-  const logo = await api('/api/logo/status').catch(()=>({found:false}));
+  const [logo, emp] = await Promise.all([
+    api('/api/logo/status').catch(()=>({found:false})),
+    api('/api/empresa').catch(()=>({}))
+  ]);
   setContent(`
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+    <!-- DATOS DE LA EMPRESA -->
+    <div class="card" style="grid-column:1/-1">
+      <div class="card-header">
+        <div class="card-title">🏢 Datos de la Empresa</div>
+        <button class="btn btn-primary btn-sm" onclick="empGuardar()">💾 Guardar Cambios</button>
+      </div>
+      <div class="card-body">
+        <div class="form-grid form-grid-2" style="gap:14px">
+          <div class="field-group" style="grid-column:1/-1">
+            <label class="field-required">Nombre Comercial</label>
+            <input id="emp_nom" value="${esc(emp.nombre||'VEF Automatización')}" placeholder="Nombre de tu empresa">
+          </div>
+          <div class="field-group" style="grid-column:1/-1">
+            <label>Razón Social</label>
+            <input id="emp_rs" value="${esc(emp.razon_social||'')}" placeholder="Razón Social S.A. de C.V.">
+          </div>
+          <div class="field-group">
+            <label>RFC</label>
+            <input id="emp_rfc" value="${esc(emp.rfc||'')}" placeholder="Ej: VEF210101XXX">
+          </div>
+          <div class="field-group">
+            <label>Régimen Fiscal</label>
+            <input id="emp_reg" value="${esc(emp.regimen_fiscal||'')}" placeholder="Ej: 601 - General de Ley">
+          </div>
+          <div class="field-group">
+            <label>Contacto / Responsable</label>
+            <input id="emp_con" value="${esc(emp.contacto||'')}" placeholder="Nombre del contacto">
+          </div>
+          <div class="field-group">
+            <label>Teléfono</label>
+            <input id="emp_tel" value="${esc(emp.telefono||'+52 (722) 115-7792')}" placeholder="+52 (xxx) xxx-xxxx">
+          </div>
+          <div class="field-group" style="grid-column:1/-1">
+            <label>Email</label>
+            <input id="emp_email" type="email" value="${esc(emp.email||'soporte.ventas@vef-automatizacion.com')}" placeholder="correo@empresa.com">
+          </div>
+          <div class="field-group" style="grid-column:1/-1">
+            <label>Dirección</label>
+            <input id="emp_dir" value="${esc(emp.direccion||'')}" placeholder="Calle, número, colonia">
+          </div>
+          <div class="field-group">
+            <label>CP</label>
+            <input id="emp_cp" value="${esc(emp.cp||'')}" placeholder="50000">
+          </div>
+          <div class="field-group">
+            <label>Ciudad</label>
+            <input id="emp_ciudad" value="${esc(emp.ciudad||'')}" placeholder="Toluca">
+          </div>
+          <div class="field-group">
+            <label>Estado</label>
+            <input id="emp_estado" value="${esc(emp.estado||'Estado de México')}" placeholder="Estado de México">
+          </div>
+          <div class="field-group">
+            <label>País</label>
+            <input id="emp_pais" value="${esc(emp.pais||'México')}" placeholder="México">
+          </div>
+          <div class="field-group">
+            <label>Sitio Web</label>
+            <input id="emp_web" value="${esc(emp.sitio_web||'')}" placeholder="www.vef-automatizacion.com">
+          </div>
+          <div class="field-group">
+            <label>Moneda por Defecto</label>
+            <select id="emp_mon">
+              <option ${(emp.moneda_default||'USD')==='USD'?'selected':''}>USD</option>
+              <option ${emp.moneda_default==='MXN'?'selected':''}>MXN</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label>IVA por Defecto (%)</label>
+            <input id="emp_iva" type="text" inputmode="decimal" value="${emp.iva_default||16}" placeholder="16">
+          </div>
+          <div class="field-group" style="grid-column:1/-1">
+            <label>Leyenda en Cotizaciones</label>
+            <textarea id="emp_ncot" rows="2" placeholder="Texto que aparece al pie de las cotizaciones...">${esc(emp.notas_cotizacion||'')}</textarea>
+          </div>
+          <div class="field-group" style="grid-column:1/-1">
+            <label>Leyenda en Facturas</label>
+            <textarea id="emp_nfac" rows="2" placeholder="Texto que aparece al pie de las facturas...">${esc(emp.notas_factura||'')}</textarea>
+          </div>
+        </div>
+        <div id="empMsg" style="margin-top:12px;font-size:.85rem"></div>
+      </div>
+    </div>
 
     <!-- LOGO -->
     <div class="card">
@@ -1722,6 +1809,40 @@ async function configuracion(){
     </div>
 
   </div>`);
+}
+
+async function empGuardar(){
+  const msg = document.getElementById('empMsg');
+  msg.innerHTML = '⏳ Guardando...';
+  const body = {
+    nombre:       ge('emp_nom')?.value.trim(),
+    razon_social: ge('emp_rs')?.value.trim(),
+    rfc:          ge('emp_rfc')?.value.trim().toUpperCase(),
+    regimen_fiscal: ge('emp_reg')?.value.trim(),
+    contacto:     ge('emp_con')?.value.trim(),
+    telefono:     ge('emp_tel')?.value.trim(),
+    email:        ge('emp_email')?.value.trim(),
+    direccion:    ge('emp_dir')?.value.trim(),
+    cp:           ge('emp_cp')?.value.trim(),
+    ciudad:       ge('emp_ciudad')?.value.trim(),
+    estado:       ge('emp_estado')?.value.trim(),
+    pais:         ge('emp_pais')?.value.trim(),
+    sitio_web:    ge('emp_web')?.value.trim(),
+    moneda_default: ge('emp_mon')?.value,
+    iva_default:  toNum(ge('emp_iva')?.value)||16,
+    notas_cotizacion: ge('emp_ncot')?.value.trim(),
+    notas_factura:    ge('emp_nfac')?.value.trim(),
+  };
+  if(!body.nombre){ toast('El nombre de la empresa es requerido','err'); msg.innerHTML=''; return; }
+  try {
+    await api('/api/empresa','PUT',body);
+    msg.innerHTML = '<span style="color:var(--verde)">✅ Datos guardados correctamente</span>';
+    toast('Empresa actualizada ✓');
+    setTimeout(()=>msg.innerHTML='', 3000);
+  } catch(e) {
+    msg.innerHTML = '<span style="color:var(--rojo)">❌ '+esc(e.message)+'</span>';
+    toast(e.message,'err');
+  }
 }
 
 async function logoUpload(){
